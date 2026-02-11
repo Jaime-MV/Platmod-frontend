@@ -1,1 +1,7 @@
-export const API_URL = import.meta.env.VITE_API_URL;
+// src/config.js
+
+// Para test localmente:
+// export const API_URL = "http://localhost:8080/api"; 
+
+// Para test en Render:
+export const API_URL = "https://api-platmod.onrender.com/api";
