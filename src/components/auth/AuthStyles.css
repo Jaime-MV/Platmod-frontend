@@ -1,0 +1,146 @@
+/* Variables de color basadas en la imagen UNICAES */
+:root {
+  --bg-red-primary: #921428;    /* Rojo intenso principal */
+  --bg-red-secondary: #5c0a18;  /* Rojo más oscuro para gradiente */
+  --accent-gold: #e2b753;       /* Dorado del botón */
+  --accent-gold-hover: #d4af37; /* Dorado un poco más oscuro al pasar el mouse */
+  --text-dark: #333333;         /* Texto oscuro */
+  --text-light: #666666;        /* Texto secundario */
+  --white: #ffffff;
+  --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+/* Contenedor principal: Fondo rojo que ocupa toda la pantalla */
+.auth-container {
+  min-height: 100vh;
+  width: 100%;
+  /* Usamos un gradiente sutil para darle profundidad como en la imagen */
+  background: linear-gradient(135deg, var(--bg-red-primary) 0%, var(--bg-red-secondary) 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Arial', sans-serif; /* O usa una fuente como Roboto/Montserrat si la importas */
+}
+
+/* La tarjeta blanca central */
+.auth-card {
+  background-color: var(--white);
+  padding: 2.5rem;
+  border-radius: 15px;
+  box-shadow: var(--card-shadow);
+  width: 100%;
+  max-width: 450px; /* Ancho máximo similar al de Platzi/Imagen */
+  text-align: center;
+}
+
+.auth-title {
+  color: var(--text-dark);
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+}
+
+/* Estilos del formulario y los inputs */
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.input-group {
+  text-align: left;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--text-dark);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.auth-input {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  box-sizing: border-box; /* Importante para que el padding no afecte el ancho */
+}
+
+.auth-input:focus {
+  outline: none;
+  border-color: var(--accent-gold);
+}
+
+/* Estilo del Select (para el Rol) */
+.auth-select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    background-color: white;
+    cursor: pointer;
+}
+
+/* Botón Principal Dorado */
+.btn-gold {
+  margin-top: 10px;
+  width: 100%;
+  padding: 12px;
+  background-color: var(--accent-gold);
+  color: var(--text-dark); /* Texto oscuro para contraste con el dorado */
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.btn-gold:hover {
+  background-color: var(--accent-gold-hover);
+}
+
+.btn-gold:active {
+  transform: scale(0.98);
+}
+
+/* Enlaces para alternar entre Login/Registro */
+.toggle-text {
+  margin-top: 1.5rem;
+  color: var(--text-light);
+  font-size: 0.95rem;
+}
+
+.toggle-link {
+  color: var(--bg-red-primary);
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.toggle-link:hover {
+  text-decoration: underline;
+}
+
+/* Mensajes de error o éxito */
+.message {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+.message.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+}
+.message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+}
