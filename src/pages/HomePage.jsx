@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getCursos, getPlanes } from '../services/api';
-import TeachersSection from '../components/TeachersSection'; // 👈 1. IMPORTA EL COMPONENTE (Asegúrate que la ruta sea correcta)
+import TeachersSection from '../components/TeachersSection';
+import CourseGrid from '../components/CourseGrid'; // 👈 1. IMPORTAMOS EL NUEVO COMPONENTE
 import './HomeStyles.css';
 
 const HomePage = () => {
@@ -23,7 +24,7 @@ const HomePage = () => {
 
     return (
         <div className="home-container">
-            {/* ... Navbar y Hero ... (déjalos igual) */}
+            {/* ... Navbar ... */}
             <nav className="navbar">
                 <div className="logo">PlatMod <span className="dot">.</span></div>
                 <div className="nav-links">
@@ -35,34 +36,22 @@ const HomePage = () => {
                 </div>
             </nav>
 
+            {/* ... Hero Section ... */}
             <header className="hero">
                 <h1>La escuela de tecnología <br /> <span className="highlight">que necesitas</span></h1>
                 <p>Aprende desarrollo de software, diseño e inglés desde cero hasta nivel experto.</p>
                 <button className="btn-cta">Comienza Gratis</button>
             </header>
 
-            {/* --- LISTA DE CURSOS --- */}
-            <section id="cursos" className="section-container">
-                <h2 className="section-title">Nuestros Cursos Recientes</h2>
-                <div className="courses-grid">
-                    {cursos.map((curso) => (
-                        <div key={curso.idCurso} className="course-card">
-                            <img src={curso.portadaUrl} alt={curso.titulo} className="course-img" />
-                            <div className="course-info">
-                                <h3>{curso.titulo}</h3>
-                                <p>{curso.descripcion.substring(0, 80)}...</p>
-                                <div className="course-footer">
-                                    <span className="badge">Nuevo</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+            {/* ⬇️⬇️⬇️ 2. AQUÍ ESTÁ EL CAMBIO PRINCIPAL ⬇️⬇️⬇️ */}
+            {/* Reemplazamos la sección vieja por el nuevo Grid Compacto */}
+            <div id="cursos">
+                <CourseGrid courses={cursos} />
+            </div>
+            {/* ⬆️⬆️⬆️ FIN DEL CAMBIO ⬆️⬆️⬆️ */}
 
-            {/* ⬇️⬇️⬇️ 2. AQUÍ AGREGAS LA SECCIÓN ⬇️⬇️⬇️ */}
+            {/* Sección de Profesores (Carrusel Rojo) */}
             <TeachersSection />
-            {/* ⬆️⬆️⬆️ ESTO ES LO QUE FALTABA ⬆️⬆️⬆️ */}
 
             {/* --- PLANES DE SUSCRIPCIÓN --- */}
             <section id="planes" className="section-container dark-bg">
