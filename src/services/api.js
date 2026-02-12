@@ -22,3 +22,14 @@ export const getPlanes = async () => {
         return [];
     }
 };
+
+export const getDocentesHome = async () => {
+    try {
+        const response = await fetch(`${API_URL}/docentes/home`);
+        if (!response.ok) throw new Error('Error al cargar docentes');
+        return await response.json();
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};

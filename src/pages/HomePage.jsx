@@ -1,7 +1,7 @@
-// src/pages/HomePage.jsx
 import { useEffect, useState } from 'react';
 import { getCursos, getPlanes } from '../services/api';
-import './HomeStyles.css'; // Ahora crearemos este CSS
+import TeachersSection from '../components/TeachersSection'; // 👈 1. IMPORTA EL COMPONENTE (Asegúrate que la ruta sea correcta)
+import './HomeStyles.css';
 
 const HomePage = () => {
     const [cursos, setCursos] = useState([]);
@@ -9,7 +9,6 @@ const HomePage = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Cargar datos al iniciar la página
         const fetchData = async () => {
             const dataCursos = await getCursos();
             const dataPlanes = await getPlanes();
@@ -24,7 +23,7 @@ const HomePage = () => {
 
     return (
         <div className="home-container">
-            {/* --- NAVBAR SIMULADO --- */}
+            {/* ... Navbar y Hero ... (déjalos igual) */}
             <nav className="navbar">
                 <div className="logo">PlatMod <span className="dot">.</span></div>
                 <div className="nav-links">
@@ -36,7 +35,6 @@ const HomePage = () => {
                 </div>
             </nav>
 
-            {/* --- HERO SECTION --- */}
             <header className="hero">
                 <h1>La escuela de tecnología <br /> <span className="highlight">que necesitas</span></h1>
                 <p>Aprende desarrollo de software, diseño e inglés desde cero hasta nivel experto.</p>
@@ -62,6 +60,10 @@ const HomePage = () => {
                 </div>
             </section>
 
+            {/* ⬇️⬇️⬇️ 2. AQUÍ AGREGAS LA SECCIÓN ⬇️⬇️⬇️ */}
+            <TeachersSection />
+            {/* ⬆️⬆️⬆️ ESTO ES LO QUE FALTABA ⬆️⬆️⬆️ */}
+
             {/* --- PLANES DE SUSCRIPCIÓN --- */}
             <section id="planes" className="section-container dark-bg">
                 <h2 className="section-title text-white">Planes de Suscripción</h2>
@@ -82,7 +84,6 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* --- FOOTER --- */}
             <footer className="footer">
                 <p>© 2026 PlatMod. Hecho con ❤️ y Java Spring Boot.</p>
             </footer>
