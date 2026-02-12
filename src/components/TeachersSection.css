@@ -122,6 +122,7 @@
   display: -webkit-box;
   -webkit-line-clamp: 2; /* Máximo 2 líneas de texto */
   -webkit-box-orient: vertical;
+  line-clamp: 2;
   overflow: hidden;
   text-overflow: ellipsis;
 }
