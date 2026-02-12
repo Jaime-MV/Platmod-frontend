@@ -5,19 +5,17 @@ import { API_URL } from '../config';
 const AuthPage = () => {
   // Estados de vista
   const [isLoginView, setIsLoginView] = useState(true);
-  const [isVerifyView, setIsVerifyView] = useState(false); // NUEVO ESTADO: Vista de verificación
+  const [isVerifyView, setIsVerifyView] = useState(false);
 
-  // Datos del formulario
+  // Datos del formulario (YA NO INCLUYE ROL)
   const [formData, setFormData] = useState({
     nombre: '',
     correo: '',
-    contrasena: '',
-    rol: 'ESTUDIANTE'
+    contrasena: ''
   });
 
   // Estado para el código de verificación
   const [codigo, setCodigo] = useState('');
-
   const [message, setMessage] = useState({ text: '', type: '' });
 
   const handleChange = (e) => {
@@ -29,19 +27,20 @@ const AuthPage = () => {
 
   const toggleView = () => {
     setIsLoginView(!isLoginView);
-    setIsVerifyView(false); // Reiniciar verificación si cambia de vista manual
+    setIsVerifyView(false);
     setMessage({ text: '', type: '' });
-    setFormData({ nombre: '', correo: '', contrasena: '', rol: 'ESTUDIANTE' });
+    // Al limpiar, ya no reiniciamos el rol
+    setFormData({ nombre: '', correo: '', contrasena: '' });
   };
 
-  // --- 1. LÓGICA DE LOGIN Y REGISTRO ---
+  // --- LÓGICA DE LOGIN Y REGISTRO ---
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage({ text: 'Procesando...', type: '' });
 
     const endpoint = isLoginView ? `${API_URL}/auth/login` : `${API_URL}/usuarios`;
     
-    // Si es login, solo mandamos correo/pass. Si es registro, todo el objeto.
+    // El backend ahora se encarga del Rol, así que enviamos formData limpio
     const bodyPayload = isLoginView 
       ? { correo: formData.correo, contrasena: formData.contrasena }
       : formData;
@@ -60,11 +59,14 @@ const AuthPage = () => {
            // LOGIN EXITOSO
            localStorage.setItem('token', data.token);
            setMessage({ text: '¡Bienvenido! Redirigiendo...', type: 'success' });
-           // Aquí podrías redirigir al dashboard
+           // window.location.href = '/dashboard'; // Descomentar cuando tengas dashboard
         } else {
-           // REGISTRO EXITOSO -> MOSTRAR PANTALLA DE VERIFICACIÓN
-           setMessage({ text: '¡Cuenta creada! Revisa tu correo e ingresa el código.', type: 'success' });
-           setIsVerifyView(true); // <--- CAMBIO CLAVE: Activamos la vista de verificación
+           // REGISTRO EXITOSO
+           setMessage({ text: '¡Cuenta creada con éxito! Por favor inicia sesión.', type: 'success' });
+           // Si no tienes verificación por correo real, mandamos directo al login
+           setTimeout(() => {
+               toggleView(); // Cambia a vista de Login automáticamente
+           }, 2000);
         }
       } else {
         const errorMsg = data.message || data.error || 'Ocurrió un error.';
@@ -76,44 +78,13 @@ const AuthPage = () => {
     }
   };
 
-  // --- 2. NUEVA LÓGICA DE VERIFICACIÓN ---
-  const handleVerifySubmit = async (e) => {
-      e.preventDefault();
-      setMessage({ text: 'Verificando código...', type: '' });
-
-      try {
-          const response = await fetch(`${API_URL}/auth/verify`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                  correo: formData.correo, // Usamos el correo que ya escribió el usuario
-                  codigo: codigo
-              })
-          });
-
-          if (response.ok) {
-              setMessage({ text: '¡Verificación exitosa! Ahora puedes iniciar sesión.', type: 'success' });
-              setTimeout(() => {
-                  setIsVerifyView(false); // Ocultamos verificación
-                  setIsLoginView(true);   // Mostramos Login
-                  setCodigo('');          // Limpiamos código
-              }, 2000);
-          } else {
-              setMessage({ text: 'Código incorrecto o expirado.', type: 'error' });
-          }
-      } catch (error) {
-          setMessage({ text: 'Error de conexión al verificar.', type: 'error' });
-      }
-  };
-
   // --- RENDERIZADO ---
   return (
     <div className="auth-container">
       <div className="auth-card">
         
-        {/* TÍTULO DINÁMICO */}
         <h2 className="auth-title">
-          {isVerifyView ? 'Verificar Cuenta' : (isLoginView ? 'Iniciar Sesión' : 'Crear Cuenta')}
+          {isLoginView ? 'Iniciar Sesión' : 'Crear Cuenta'}
         </h2>
 
         {message.text && (
@@ -122,103 +93,61 @@ const AuthPage = () => {
             </div>
         )}
 
-        {/* --- VISTA DE VERIFICACIÓN (NUEVA) --- */}
-        {isVerifyView ? (
-            <form className="auth-form" onSubmit={handleVerifySubmit}>
-                <p style={{marginBottom: '15px', color: '#666'}}>
-                    Hemos enviado un código de 6 dígitos a <strong>{formData.correo}</strong>
-                </p>
-                <div className="input-group">
-                    <label className="input-label">Código de Verificación</label>
-                    <input
-                        type="text"
-                        className="auth-input"
-                        placeholder="Ej. 123456"
-                        maxLength="6"
-                        value={codigo}
-                        onChange={(e) => setCodigo(e.target.value)}
-                        required
-                    />
-                </div>
-                <button type="submit" className="btn-gold">Verificar Código</button>
-                <p className="toggle-text" style={{cursor:'pointer'}} onClick={() => setIsVerifyView(false)}>
-                    Volver
-                </p>
-            </form>
-        ) : (
-            /* --- VISTAS NORMALES (LOGIN / REGISTRO) --- */
-            <form className="auth-form" onSubmit={handleSubmit}>
-              {!isLoginView && (
-                <div className="input-group">
-                  <label className="input-label" htmlFor="nombre">Nombre Completo</label>
-                  <input
-                    type="text"
-                    name="nombre"
-                    className="auth-input"
-                    placeholder="Ej. Juan Pérez"
-                    value={formData.nombre}
-                    onChange={handleChange}
-                    required={!isLoginView}
-                  />
-                </div>
-              )}
-
-              <div className="input-group">
-                <label className="input-label" htmlFor="correo">Correo Electrónico</label>
+        <form className="auth-form" onSubmit={handleSubmit}>
+            {!isLoginView && (
+            <div className="input-group">
+                <label className="input-label" htmlFor="nombre">Nombre Completo</label>
                 <input
-                  type="email"
-                  name="correo"
-                  className="auth-input"
-                  placeholder="tu@email.com"
-                  value={formData.correo}
-                  onChange={handleChange}
-                  required
+                type="text"
+                name="nombre"
+                className="auth-input"
+                placeholder="Ej. Juan Pérez"
+                value={formData.nombre}
+                onChange={handleChange}
+                required={!isLoginView}
                 />
-              </div>
+            </div>
+            )}
 
-              <div className="input-group">
-                <label className="input-label" htmlFor="contrasena">Contraseña</label>
-                <input
-                  type="password"
-                  name="contrasena"
-                  className="auth-input"
-                  placeholder="******"
-                  value={formData.contrasena}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+            <div className="input-group">
+            <label className="input-label" htmlFor="correo">Correo Electrónico</label>
+            <input
+                type="email"
+                name="correo"
+                className="auth-input"
+                placeholder="tu@email.com"
+                value={formData.correo}
+                onChange={handleChange}
+                required
+            />
+            </div>
 
-               {!isLoginView && (
-                <div className="input-group">
-                  <label className="input-label" htmlFor="rol">Rol</label>
-                  <select
-                      name="rol"
-                      className="auth-select"
-                      value={formData.rol}
-                      onChange={handleChange}
-                  >
-                      <option value="ESTUDIANTE">Estudiante</option>
-                      <option value="DOCENTE">Docente</option>
-                  </select>
-                </div>
-              )}
+            <div className="input-group">
+            <label className="input-label" htmlFor="contrasena">Contraseña</label>
+            <input
+                type="password"
+                name="contrasena"
+                className="auth-input"
+                placeholder="******"
+                value={formData.contrasena}
+                onChange={handleChange}
+                required
+            />
+            </div>
 
-              <button type="submit" className="btn-gold">
-                {isLoginView ? 'Ingresar' : 'Registrarme'}
-              </button>
-            </form>
-        )}
+            {/* SE ELIMINÓ EL SELECT DE ROL AQUÍ */}
 
-        {/* --- PIE DE PÁGINA (Toggle Login/Registro) --- */}
-        {!isVerifyView && (
-            <p className="toggle-text">
+            <button type="submit" className="btn-gold">
+            {isLoginView ? 'Ingresar' : 'Registrarme'}
+            </button>
+        </form>
+
+        <p className="toggle-text">
             {isLoginView ? '¿No tienes cuenta? ' : '¿Ya tienes cuenta? '}
             <span className="toggle-link" onClick={toggleView}>
                 {isLoginView ? 'Regístrate aquí' : 'Inicia sesión'}
             </span>
-            </p>
-        )}
+        </p>
 
       </div>
     </div>
