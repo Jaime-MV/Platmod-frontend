@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getCursos, getPlanes } from '../services/api';
 import TeachersSection from '../components/TeachersSection';
-import CourseGrid from '../components/CourseGrid'; // 👈 1. IMPORTAMOS EL NUEVO COMPONENTE
+import CourseGrid from '../components/CourseGrid';
 import './HomeStyles.css';
 
 const HomePage = () => {
@@ -11,16 +11,30 @@ const HomePage = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const dataCursos = await getCursos();
-            const dataPlanes = await getPlanes();
-            setCursos(dataCursos);
-            setPlanes(dataPlanes);
-            setLoading(false);
+            try {
+                // Ejecutamos ambas peticiones en paralelo para que cargue más rápido
+                const [dataCursos, dataPlanes] = await Promise.all([
+                    getCursos(),
+                    getPlanes()
+                ]);
+                
+                setCursos(dataCursos);
+                setPlanes(dataPlanes);
+            } catch (error) {
+                console.error("Error cargando datos del home:", error);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchData();
     }, []);
 
     if (loading) return <div className="loading">Cargando la escuela...</div>;
+
+    // --- FILTRADO DE CURSOS ---
+    // Filtramos aquí para pasarle al grid SOLO los cursos que deben verse.
+    // Usamos Boolean() para asegurar que funcione con 1 (MySQL) o true (Postgres/JSON).
+    const cursosVisibles = cursos.filter(curso => Boolean(curso.estado) === true);
 
     return (
         <div className="home-container">
@@ -43,14 +57,12 @@ const HomePage = () => {
                 <button className="btn-cta">Comienza Gratis</button>
             </header>
 
-            {/* ⬇️⬇️⬇️ 2. AQUÍ ESTÁ EL CAMBIO PRINCIPAL ⬇️⬇️⬇️ */}
-            {/* Reemplazamos la sección vieja por el nuevo Grid Compacto */}
+            {/* ⬇️ SECCIÓN DE CURSOS (GRID NUEVO) ⬇️ */}
             <div id="cursos">
-                <CourseGrid courses={cursos} />
+                <CourseGrid courses={cursosVisibles} />
             </div>
-            {/* ⬆️⬆️⬆️ FIN DEL CAMBIO ⬆️⬆️⬆️ */}
 
-            {/* Sección de Profesores (Carrusel Rojo) */}
+            {/* Sección de Profesores */}
             <TeachersSection />
 
             {/* --- PLANES DE SUSCRIPCIÓN --- */}

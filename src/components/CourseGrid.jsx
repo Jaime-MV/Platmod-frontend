@@ -1,39 +1,49 @@
 import React from 'react';
-import './CourseGrid.css';
+import './CourseGrid.css'; // Asegúrate de que tu CSS esté en este archivo
 
 const CourseGrid = ({ courses }) => {
-  if (!courses || courses.length === 0) return null;
+  // 1. Manejo de estado vacío
+  if (!courses || courses.length === 0) {
+    return (
+      <section className="course-grid-section">
+        <h2 className="section-title">Explora nuestros cursos</h2>
+        <div style={{ textAlign: 'center', color: '#8da2c0', padding: '40px' }}>
+          <p>No hay cursos disponibles en este momento.</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="course-grid-section">
-      <h2 className="section-title">Explora nuestras Escuelas</h2>
+      <h2 className="section-title">Explora nuestros cursos</h2>
       
       <div className="course-grid-container">
         {courses.map((curso) => (
           <div key={curso.idCurso} className="course-card-compact">
-            {/* IZQUIERDA: ICONO */}
+            {/* ICONO / PORTADA */}
             <div className="course-icon-wrapper">
               <img 
-                src={curso.portadaUrl || "https://static.platzi.com/media/learningpath/emblems/80b010b7-adb8-4274-965d-113d97cb0d5b.jpg"} 
+                src={curso.portadaUrl || "https://via.placeholder.com/50"} 
                 alt={curso.titulo} 
                 className="course-icon-img" 
+                onError={(e) => e.target.src = 'https://via.placeholder.com/50?text=C'} // Fallback si la imagen falla
               />
             </div>
 
-            {/* DERECHA: TEXTO */}
+            {/* TEXTOS */}
             <div className="course-info-compact">
               <h3 className="course-title-compact">{curso.titulo}</h3>
-              <p className="course-meta">
-                {/* Texto simulado "X rutas/clases" con flechita verde */}
-                <span className="meta-text">12 clases disponibles</span>
-                <svg className="meta-arrow" width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1L5 5L9 1" stroke="#98ca3f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </p>
+              <div className="course-meta">
+                <span>Ver contenido</span>
+                {/* Flecha simple usando caracteres o SVG */}
+                <span className="meta-arrow">→</span>
+              </div>
             </div>
-            
-            {/* Enlace que cubre toda la tarjeta para clickear */}
-            <a href={`/curso/${curso.idCurso}`} className="card-link-overlay"></a>
+
+            {/* LINK FANTASMA (Para hacer click en toda la tarjeta) */}
+            {/* Aquí podrías usar <Link to={`/curso/${curso.idCurso}`} ... /> si usas React Router */}
+            <a href={`#curso-${curso.idCurso}`} className="card-link-overlay" aria-label={`Ver curso ${curso.titulo}`}></a>
           </div>
         ))}
       </div>

@@ -1,21 +1,21 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // <--- 1. IMPORTAR ESTO
 import '../components/auth/AuthStyles.css'; 
 import { API_URL } from '../config'; 
 
 const AuthPage = () => {
+  const navigate = useNavigate(); // <--- 2. INICIALIZAR EL HOOK
+
   // Estados de vista
   const [isLoginView, setIsLoginView] = useState(true);
-  const [isVerifyView, setIsVerifyView] = useState(false);
-
-  // Datos del formulario (YA NO INCLUYE ROL)
+  
+  // Datos del formulario
   const [formData, setFormData] = useState({
     nombre: '',
     correo: '',
     contrasena: ''
   });
 
-  // Estado para el código de verificación
-  const [codigo, setCodigo] = useState('');
   const [message, setMessage] = useState({ text: '', type: '' });
 
   const handleChange = (e) => {
@@ -27,9 +27,7 @@ const AuthPage = () => {
 
   const toggleView = () => {
     setIsLoginView(!isLoginView);
-    setIsVerifyView(false);
     setMessage({ text: '', type: '' });
-    // Al limpiar, ya no reiniciamos el rol
     setFormData({ nombre: '', correo: '', contrasena: '' });
   };
 
@@ -40,7 +38,6 @@ const AuthPage = () => {
 
     const endpoint = isLoginView ? `${API_URL}/auth/login` : `${API_URL}/usuarios`;
     
-    // El backend ahora se encarga del Rol, así que enviamos formData limpio
     const bodyPayload = isLoginView 
       ? { correo: formData.correo, contrasena: formData.contrasena }
       : formData;
@@ -52,37 +49,67 @@ const AuthPage = () => {
         body: JSON.stringify(bodyPayload),
       });
 
-      const data = await response.json();
+      let data = {};
+      try {
+        const text = await response.text();
+        data = text ? JSON.parse(text) : {};
+      } catch (err) {
+        console.warn("No se pudo parsear la respuesta JSON");
+      }
 
       if (response.ok) {
+        // --- ÉXITO ---
         if (isLoginView) {
-           // LOGIN EXITOSO
+           // 1. Guardar Token
            localStorage.setItem('token', data.token);
-           setMessage({ text: '¡Bienvenido! Redirigiendo...', type: 'success' });
-           // window.location.href = '/dashboard'; // Descomentar cuando tengas dashboard
-        } else {
-           // REGISTRO EXITOSO
-           setMessage({ text: '¡Cuenta creada con éxito! Por favor inicia sesión.', type: 'success' });
-           // Si no tienes verificación por correo real, mandamos directo al login
+           
+           // 2. Guardar datos del usuario (IMPORTANTE PARA RUTAS PROTEGIDAS)
+           // Guardamos el objeto entero para leer el rol luego
+           localStorage.setItem('user', JSON.stringify({
+               id: data.idUsuario,
+               nombre: data.nombre,
+               correo: data.correo,
+               rol: data.rol
+           }));
+
+           setMessage({ text: '¡Bienvenido!', type: 'success' });
+           
+           // 3. REDIRECCIÓN INTELIGENTE
            setTimeout(() => {
-               toggleView(); // Cambia a vista de Login automáticamente
-           }, 2000);
+               if (data.rol === 'ADMINISTRADOR') {
+                   console.log("Redirigiendo a Dashboard Admin...");
+                   navigate('/admin'); // <--- Llevamos al Admin a su panel
+               } else {
+                   console.log("Redirigiendo a Home...");
+                   navigate('/'); // <--- Llevamos a estudiantes/docentes al Home
+               }
+           }, 1000); // Pequeño delay para que lean "Bienvenido"
+
+        } else {
+           setMessage({ text: '¡Cuenta creada! Inicia sesión.', type: 'success' });
+           setTimeout(() => toggleView(), 2000);
         }
       } else {
-        const errorMsg = data.message || data.error || 'Ocurrió un error.';
-        setMessage({ text: `Error: ${errorMsg}`, type: 'error' });
+        // --- ERROR ---
+        if (response.status === 403) {
+            setMessage({ text: 'Acceso denegado (403). Verifica tus credenciales.', type: 'error' });
+        } else if (response.status === 401) {
+            setMessage({ text: 'Correo o contraseña incorrectos.', type: 'error' });
+        } else {
+            const errorMsg = data.message || data.error || `Error (${response.status})`;
+            setMessage({ text: errorMsg, type: 'error' });
+        }
       }
     } catch (error) {
-      console.error("Error:", error);
+      console.error("Error de red:", error);
       setMessage({ text: 'No se pudo conectar con el servidor.', type: 'error' });
     }
   };
 
-  // --- RENDERIZADO ---
+  // --- RENDERIZADO (Sin cambios mayores, solo quité variables no usadas) ---
   return (
     <div className="auth-container">
       <div className="auth-card">
-        
         <h2 className="auth-title">
           {isLoginView ? 'Iniciar Sesión' : 'Crear Cuenta'}
         </h2>
@@ -135,8 +162,6 @@ const AuthPage = () => {
             />
             </div>
 
-            {/* SE ELIMINÓ EL SELECT DE ROL AQUÍ */}
-
             <button type="submit" className="btn-gold">
             {isLoginView ? 'Ingresar' : 'Registrarme'}
             </button>
@@ -148,7 +173,6 @@ const AuthPage = () => {
                 {isLoginView ? 'Regístrate aquí' : 'Inicia sesión'}
             </span>
         </p>
-
       </div>
     </div>
   );
