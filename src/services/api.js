@@ -86,3 +86,23 @@ export const asignarDocente = async (idCurso, idUsuario) => {
     });
     return response.ok;
 };
+
+// Crear nuevo curso
+export const createCurso = async (cursoData) => {
+    const response = await fetch(`${API_URL}/admin/cursos`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(cursoData)
+    });
+    if (!response.ok) throw new Error('Error al crear el curso');
+    return await response.json();
+};
+
+export const deleteCurso = async (id) => {
+    const response = await fetch(`${API_URL}/admin/cursos/${id}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Error al eliminar curso');
+    return true;
+};

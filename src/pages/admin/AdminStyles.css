@@ -315,3 +315,107 @@
 
 .btn-gold-sm:hover:not(:disabled) {
     background-color: #f59e0b;}
+
+/* --- ESTILOS DEL FORMULARIO EN MODAL --- */
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.form-group label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+.form-input {
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #fbbf24;
+    box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-cancel {
+    background: white;
+    border: 1px solid #d1d5db;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #374151;
+}
+
+.btn-cancel:hover {
+    background-color: #f3f4f6;
+}
+
+/* Estilos para el conteo */
+.badge-count {
+    background-color: #e5e7eb;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #374151;
+}
+
+/* Botón Eliminar */
+.btn-delete:hover {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+/* Modal de Peligro */
+.delete-warning {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.delete-input {
+    border-color: #ef4444;
+}
+
+.btn-danger {
+    background-color: #ef4444;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-danger:hover:not(:disabled) {
+    background-color: #dc2626;
+}
+
+.btn-danger:disabled {
+    background-color: #fca5a5;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
