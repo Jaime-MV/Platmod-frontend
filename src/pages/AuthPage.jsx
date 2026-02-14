@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // <--- 1. IMPORTAR ESTO
-import '../components/auth/AuthStyles.css'; 
-import { API_URL } from '../config'; 
+import { useAuth } from '../context/AuthContext';
+import '../components/auth/AuthStyles.css';
+import { API_URL } from '../config';
 
 const AuthPage = () => {
+  const { login } = useAuth();
   const navigate = useNavigate(); // <--- 2. INICIALIZAR EL HOOK
 
   // Estados de vista
   const [isLoginView, setIsLoginView] = useState(true);
-  
+
   // Datos del formulario
   const [formData, setFormData] = useState({
     nombre: '',
@@ -37,8 +39,8 @@ const AuthPage = () => {
     setMessage({ text: 'Procesando...', type: '' });
 
     const endpoint = isLoginView ? `${API_URL}/auth/login` : `${API_URL}/usuarios`;
-    
-    const bodyPayload = isLoginView 
+
+    const bodyPayload = isLoginView
       ? { correo: formData.correo, contrasena: formData.contrasena }
       : formData;
 
@@ -60,44 +62,40 @@ const AuthPage = () => {
       if (response.ok) {
         // --- ÉXITO ---
         if (isLoginView) {
-           // 1. Guardar Token
-           localStorage.setItem('token', data.token);
-           
-           // 2. Guardar datos del usuario (IMPORTANTE PARA RUTAS PROTEGIDAS)
-           // Guardamos el objeto entero para leer el rol luego
-           localStorage.setItem('user', JSON.stringify({
-               id: data.idUsuario,
-               nombre: data.nombre,
-               correo: data.correo,
-               rol: data.rol
-           }));
+          // 1. Usar función login del contexto
+          login({
+            id: data.idUsuario,
+            nombre: data.nombre,
+            correo: data.correo,
+            rol: data.rol
+          }, data.token);
 
-           setMessage({ text: '¡Bienvenido!', type: 'success' });
-           
-           // 3. REDIRECCIÓN INTELIGENTE
-           setTimeout(() => {
-               if (data.rol === 'ADMINISTRADOR') {
-                   console.log("Redirigiendo a Dashboard Admin...");
-                   navigate('/admin'); // <--- Llevamos al Admin a su panel
-               } else {
-                   console.log("Redirigiendo a Home...");
-                   navigate('/'); // <--- Llevamos a estudiantes/docentes al Home
-               }
-           }, 1000); // Pequeño delay para que lean "Bienvenido"
+          setMessage({ text: '¡Bienvenido!', type: 'success' });
+
+          // 3. REDIRECCIÓN INTELIGENTE
+          setTimeout(() => {
+            if (data.rol === 'ADMINISTRADOR') {
+              console.log("Redirigiendo a Dashboard Admin...");
+              navigate('/admin'); // <--- Llevamos al Admin a su panel
+            } else {
+              console.log("Redirigiendo a Home...");
+              navigate('/'); // <--- Llevamos a estudiantes/docentes al Home
+            }
+          }, 1000); // Pequeño delay para que lean "Bienvenido"
 
         } else {
-           setMessage({ text: '¡Cuenta creada! Inicia sesión.', type: 'success' });
-           setTimeout(() => toggleView(), 2000);
+          setMessage({ text: '¡Cuenta creada! Inicia sesión.', type: 'success' });
+          setTimeout(() => toggleView(), 2000);
         }
       } else {
         // --- ERROR ---
         if (response.status === 403) {
-            setMessage({ text: 'Acceso denegado (403). Verifica tus credenciales.', type: 'error' });
+          setMessage({ text: 'Acceso denegado (403). Verifica tus credenciales.', type: 'error' });
         } else if (response.status === 401) {
-            setMessage({ text: 'Correo o contraseña incorrectos.', type: 'error' });
+          setMessage({ text: 'Correo o contraseña incorrectos.', type: 'error' });
         } else {
-            const errorMsg = data.message || data.error || `Error (${response.status})`;
-            setMessage({ text: errorMsg, type: 'error' });
+          const errorMsg = data.message || data.error || `Error (${response.status})`;
+          setMessage({ text: errorMsg, type: 'error' });
         }
       }
     } catch (error) {
@@ -115,16 +113,16 @@ const AuthPage = () => {
         </h2>
 
         {message.text && (
-            <div className={`message ${message.type}`}>
-                {message.text}
-            </div>
+          <div className={`message ${message.type}`}>
+            {message.text}
+          </div>
         )}
 
         <form className="auth-form" onSubmit={handleSubmit}>
-            {!isLoginView && (
+          {!isLoginView && (
             <div className="input-group">
-                <label className="input-label" htmlFor="nombre">Nombre Completo</label>
-                <input
+              <label className="input-label" htmlFor="nombre">Nombre Completo</label>
+              <input
                 type="text"
                 name="nombre"
                 className="auth-input"
@@ -132,46 +130,46 @@ const AuthPage = () => {
                 value={formData.nombre}
                 onChange={handleChange}
                 required={!isLoginView}
-                />
+              />
             </div>
-            )}
+          )}
 
-            <div className="input-group">
+          <div className="input-group">
             <label className="input-label" htmlFor="correo">Correo Electrónico</label>
             <input
-                type="email"
-                name="correo"
-                className="auth-input"
-                placeholder="tu@email.com"
-                value={formData.correo}
-                onChange={handleChange}
-                required
+              type="email"
+              name="correo"
+              className="auth-input"
+              placeholder="tu@email.com"
+              value={formData.correo}
+              onChange={handleChange}
+              required
             />
-            </div>
+          </div>
 
-            <div className="input-group">
+          <div className="input-group">
             <label className="input-label" htmlFor="contrasena">Contraseña</label>
             <input
-                type="password"
-                name="contrasena"
-                className="auth-input"
-                placeholder="******"
-                value={formData.contrasena}
-                onChange={handleChange}
-                required
+              type="password"
+              name="contrasena"
+              className="auth-input"
+              placeholder="******"
+              value={formData.contrasena}
+              onChange={handleChange}
+              required
             />
-            </div>
+          </div>
 
-            <button type="submit" className="btn-gold">
+          <button type="submit" className="btn-gold">
             {isLoginView ? 'Ingresar' : 'Registrarme'}
-            </button>
+          </button>
         </form>
 
         <p className="toggle-text">
-            {isLoginView ? '¿No tienes cuenta? ' : '¿Ya tienes cuenta? '}
-            <span className="toggle-link" onClick={toggleView}>
-                {isLoginView ? 'Regístrate aquí' : 'Inicia sesión'}
-            </span>
+          {isLoginView ? '¿No tienes cuenta? ' : '¿Ya tienes cuenta? '}
+          <span className="toggle-link" onClick={toggleView}>
+            {isLoginView ? 'Regístrate aquí' : 'Inicia sesión'}
+          </span>
         </p>
       </div>
     </div>

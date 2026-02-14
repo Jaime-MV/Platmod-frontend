@@ -2,12 +2,14 @@ import { useEffect, useState } from 'react';
 import { getCursos, getPlanes } from '../services/api';
 import TeachersSection from '../components/TeachersSection';
 import CourseGrid from '../components/CourseGrid';
+import { useTheme } from '../context/ThemeContext'; // Importar hook de tema
 import './HomeStyles.css';
 
 const HomePage = () => {
     const [cursos, setCursos] = useState([]);
     const [planes, setPlanes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { theme, toggleTheme } = useTheme(); // Usar hook
 
     useEffect(() => {
         const fetchData = async () => {
@@ -17,7 +19,7 @@ const HomePage = () => {
                     getCursos(),
                     getPlanes()
                 ]);
-                
+
                 setCursos(dataCursos);
                 setPlanes(dataPlanes);
             } catch (error) {
@@ -44,7 +46,10 @@ const HomePage = () => {
                 <div className="nav-links">
                     <a href="#cursos">Cursos</a>
                     <a href="#planes">Precios</a>
-                    <button className="btn-login" onClick={() => window.location.href='/login'}>
+                    <button className="theme-toggle" onClick={toggleTheme} title="Cambiar tema">
+                        {theme === 'light' ? '🌙' : '☀️'}
+                    </button>
+                    <button className="btn-login" onClick={() => window.location.href = '/login'}>
                         Acceder
                     </button>
                 </div>
@@ -58,7 +63,8 @@ const HomePage = () => {
             </header>
 
             {/* ⬇️ SECCIÓN DE CURSOS (GRID NUEVO) ⬇️ */}
-            <div id="cursos">
+            <div id="cursos" className="section-container">
+                <h2 className="section-title">Nuestros Cursos</h2>
                 <CourseGrid courses={cursosVisibles} />
             </div>
 
@@ -66,8 +72,8 @@ const HomePage = () => {
             <TeachersSection />
 
             {/* --- PLANES DE SUSCRIPCIÓN --- */}
-            <section id="planes" className="section-container dark-bg">
-                <h2 className="section-title text-white">Planes de Suscripción</h2>
+            <section id="planes" className="section-container">
+                <h2 className="section-title">Planes de Suscripción</h2>
                 <div className="pricing-grid">
                     {planes.map((plan) => (
                         <div key={plan.idPlan} className={`pricing-card ${plan.nombre.includes('Expert') ? 'featured' : ''}`}>

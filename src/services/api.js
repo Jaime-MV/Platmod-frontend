@@ -1,12 +1,39 @@
 // src/services/api.js
-import { API_URL } from '../config'; 
+import { API_URL } from '../config';
 
 // Función auxiliar para obtener headers con Token fresco
 const getAuthHeaders = () => {
     const token = localStorage.getItem('token');
+
+    if (!token) {
+        console.warn("⚠️ No auth token found in localStorage!");
+        return { 'Content-Type': 'application/json' };
+    }
+
+    // Decode to check expiration (Debug purpose)
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const expDate = new Date(payload.exp * 1000);
+        console.log("🔑 Token Log:", {
+            sub: payload.sub,
+            rol: payload.rol,
+            exp: expDate.toLocaleString(),
+            isExpired: Date.now() >= payload.exp * 1000
+        });
+
+        if (Date.now() >= payload.exp * 1000) {
+            console.error("⛔ TOKEN EXPIRED! This will cause 401.");
+        }
+    } catch (e) {
+        console.error("⚠️ Could not parse token payload.", e);
+    }
+
+    // Ensure we don't double-add "Bearer " if the token already has it (some backends return it)
+    const authHeader = token.startsWith('Bearer ') ? token : `Bearer ${token}`;
+
     return {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
+        'Authorization': authHeader
     };
 };
 

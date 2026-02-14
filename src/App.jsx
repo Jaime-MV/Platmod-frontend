@@ -1,8 +1,10 @@
 // src/App.jsx
 
 
-import { useState, useEffect } from 'react'; 
+import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
+import { useAuth } from './context/AuthContext';
 
 // Tus otros componentes
 import HomePage from './pages/HomePage';
@@ -11,18 +13,7 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-  // Ahora sí funcionará porque useState ya está importado
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const userString = localStorage.getItem('user');
-    if (userString) {
-      setUser(JSON.parse(userString));
-    }
-  }, []);
-
-  // Validación segura con encadenamiento opcional (?.)
-  const isAdmin = user?.rol === 'ADMINISTRADOR';
+  const { user, isAdmin } = useAuth();
 
   return (
     <BrowserRouter>
@@ -34,7 +25,7 @@ function App() {
         {/* RUTA PROTEGIDA DE ADMIN */}
         {/* Si isAdmin es true, deja pasar. Si no, manda al Home (/) */}
         <Route element={<ProtectedRoute isAllowed={isAdmin} redirectTo="/" />}>
-           <Route path="/admin/*" element={<AdminDashboard />} />
+          <Route path="/admin/*" element={<AdminDashboard />} />
         </Route>
 
       </Routes>

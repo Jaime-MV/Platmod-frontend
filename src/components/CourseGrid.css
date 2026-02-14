@@ -1,62 +1,70 @@
 /* Contenedor principal */
 .course-grid-section {
     padding: 40px 20px;
-    background-color: #121f3d; /* Fondo oscuro azulado tipo Platzi */
-    /* O usa #121212 si prefieres negro puro */
+    background-color: var(--bg-color);
+    transition: background-color 0.3s ease;
 }
 
 .section-title {
-    color: white;
-    font-size: 1.8rem;
-    margin-bottom: 30px;
+    color: var(--text-color);
+    font-size: 2rem;
+    margin-bottom: 40px;
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
+    font-weight: 800;
 }
 
 /* GRIDS */
 .course-grid-container {
     display: grid;
-    /* Esto crea 3 columnas en pantallas grandes, 2 en medianas, 1 en móvil */
-    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); 
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 30px;
     max-width: 1200px;
     margin: 0 auto;
 }
 
 /* TARJETA COMPACTA */
 .course-card-compact {
-    background-color: #1b2646; /* Color de fondo de la tarjeta (azul oscuro) */
-    border: 1px solid #263353; /* Borde sutil */
-    border-radius: 8px;
-    padding: 20px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 24px;
     display: flex;
     align-items: center;
-    gap: 16px;
-    position: relative; /* Para el overlay del link */
-    transition: transform 0.2s, border-color 0.2s, background-color 0.2s;
+    gap: 20px;
+    position: relative;
+    /* Para el overlay del link */
+    transition: all 0.3s ease;
     cursor: pointer;
+    box-shadow: var(--shadow);
 }
 
 /* Efecto Hover */
 .course-card-compact:hover {
-    transform: translateY(-4px);
-    border-color: #5c6b8b;
-    background-color: #202d50;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    transform: translateY(-5px);
+    border-color: var(--primary-orange);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
 }
 
 /* ICONO */
 .course-icon-wrapper {
-    flex-shrink: 0; /* Evita que el icono se aplaste */
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    background-color: var(--bg-color);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .course-icon-img {
-    width: 48px;
-    height: 48px;
-    object-fit: contain; /* Mantiene la proporción del logo */
-    /* Si tus iconos tienen fondo blanco y quieres que se vean integrados, usa esto: */
-    /* filter: brightness(0.9); */ 
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
 }
 
 /* TEXTOS */
@@ -64,35 +72,39 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    flex-grow: 1;
 }
 
 .course-title-compact {
-    margin: 0 0 6px 0;
-    font-size: 1.1rem;
-    color: white;
-    font-weight: 600;
+    margin: 0 0 8px 0;
+    font-size: 1.2rem;
+    color: var(--text-color);
+    font-weight: 700;
     line-height: 1.3;
 }
 
 .course-meta {
     margin: 0;
-    font-size: 0.85rem;
-    color: #09f584; /* Verde neón característico */
+    font-size: 0.9rem;
+    color: var(--primary-orange);
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-weight: 500;
+    gap: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .meta-arrow {
-    transition: transform 0.2s;
+    transition: transform 0.3s;
+    font-size: 1.2rem;
 }
 
 .course-card-compact:hover .meta-arrow {
-    transform: translateY(2px); /* Pequeña animación de la flecha al hacer hover */
+    transform: translateX(5px);
 }
 
-/* LINK INVISIBLE (Truco para que toda la tarjeta sea clickeable) */
+/* LINK INVISIBLE */
 .card-link-overlay {
     position: absolute;
     top: 0;
