@@ -17,16 +17,16 @@ const CourseGrid = ({ courses }) => {
   return (
     <section className="course-grid-section">
       <h2 className="section-title">Explora nuestros cursos</h2>
-      
+
       <div className="course-grid-container">
         {courses.map((curso) => (
           <div key={curso.idCurso} className="course-card-compact">
             {/* ICONO / PORTADA */}
             <div className="course-icon-wrapper">
-              <img 
-                src={curso.portadaUrl || "https://via.placeholder.com/50"} 
-                alt={curso.titulo} 
-                className="course-icon-img" 
+              <img
+                src={curso.portadaUrl || "https://via.placeholder.com/50"}
+                alt={curso.titulo}
+                className="course-icon-img"
                 onError={(e) => e.target.src = 'https://via.placeholder.com/50?text=C'} // Fallback si la imagen falla
               />
             </div>
