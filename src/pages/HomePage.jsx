@@ -1,70 +1,79 @@
-// src/pages/HomePage.jsx
 import { useEffect, useState } from 'react';
 import { getCursos, getPlanes } from '../services/api';
-import './HomeStyles.css'; // Ahora crearemos este CSS
+import TeachersSection from '../components/TeachersSection';
+import CourseGrid from '../components/CourseGrid';
+import { useTheme } from '../context/ThemeContext'; // Importar hook de tema
+import './HomeStyles.css';
 
 const HomePage = () => {
     const [cursos, setCursos] = useState([]);
     const [planes, setPlanes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { theme, toggleTheme } = useTheme(); // Usar hook
 
     useEffect(() => {
-        // Cargar datos al iniciar la página
         const fetchData = async () => {
-            const dataCursos = await getCursos();
-            const dataPlanes = await getPlanes();
-            setCursos(dataCursos);
-            setPlanes(dataPlanes);
-            setLoading(false);
+            try {
+                // Ejecutamos ambas peticiones en paralelo para que cargue más rápido
+                const [dataCursos, dataPlanes] = await Promise.all([
+                    getCursos(),
+                    getPlanes()
+                ]);
+
+                setCursos(dataCursos);
+                setPlanes(dataPlanes);
+            } catch (error) {
+                console.error("Error cargando datos del home:", error);
+            } finally {
+                setLoading(false);
+            }
         };
         fetchData();
     }, []);
 
     if (loading) return <div className="loading">Cargando la escuela...</div>;
 
+    // --- FILTRADO DE CURSOS ---
+    // Filtramos aquí para pasarle al grid SOLO los cursos que deben verse.
+    // Usamos Boolean() para asegurar que funcione con 1 (MySQL) o true (Postgres/JSON).
+    const cursosVisibles = cursos.filter(curso => Boolean(curso.estado) === true);
+
     return (
         <div className="home-container">
-            {/* --- NAVBAR SIMULADO --- */}
+            {/* ... Navbar ... */}
             <nav className="navbar">
                 <div className="logo">PlatMod <span className="dot">.</span></div>
                 <div className="nav-links">
                     <a href="#cursos">Cursos</a>
                     <a href="#planes">Precios</a>
-                    <button className="btn-login" onClick={() => window.location.href='/login'}>
+                    <button className="theme-toggle" onClick={toggleTheme} title="Cambiar tema">
+                        {theme === 'light' ? '🌙' : '☀️'}
+                    </button>
+                    <button className="btn-login" onClick={() => window.location.href = '/login'}>
                         Acceder
                     </button>
                 </div>
             </nav>
 
-            {/* --- HERO SECTION --- */}
+            {/* ... Hero Section ... */}
             <header className="hero">
                 <h1>La escuela de tecnología <br /> <span className="highlight">que necesitas</span></h1>
                 <p>Aprende desarrollo de software, diseño e inglés desde cero hasta nivel experto.</p>
                 <button className="btn-cta">Comienza Gratis</button>
             </header>
 
-            {/* --- LISTA DE CURSOS --- */}
-            <section id="cursos" className="section-container">
-                <h2 className="section-title">Nuestros Cursos Recientes</h2>
-                <div className="courses-grid">
-                    {cursos.map((curso) => (
-                        <div key={curso.idCurso} className="course-card">
-                            <img src={curso.portadaUrl} alt={curso.titulo} className="course-img" />
-                            <div className="course-info">
-                                <h3>{curso.titulo}</h3>
-                                <p>{curso.descripcion.substring(0, 80)}...</p>
-                                <div className="course-footer">
-                                    <span className="badge">Nuevo</span>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            </section>
+            {/* ⬇️ SECCIÓN DE CURSOS (GRID NUEVO) ⬇️ */}
+            <div id="cursos" className="section-container">
+                <h2 className="section-title">Nuestros Cursos</h2>
+                <CourseGrid courses={cursosVisibles} />
+            </div>
+
+            {/* Sección de Profesores */}
+            <TeachersSection />
 
             {/* --- PLANES DE SUSCRIPCIÓN --- */}
-            <section id="planes" className="section-container dark-bg">
-                <h2 className="section-title text-white">Planes de Suscripción</h2>
+            <section id="planes" className="section-container">
+                <h2 className="section-title">Planes de Suscripción</h2>
                 <div className="pricing-grid">
                     {planes.map((plan) => (
                         <div key={plan.idPlan} className={`pricing-card ${plan.nombre.includes('Expert') ? 'featured' : ''}`}>
@@ -82,7 +91,6 @@ const HomePage = () => {
                 </div>
             </section>
 
-            {/* --- FOOTER --- */}
             <footer className="footer">
                 <p>© 2026 PlatMod. Hecho con ❤️ y Java Spring Boot.</p>
             </footer>
