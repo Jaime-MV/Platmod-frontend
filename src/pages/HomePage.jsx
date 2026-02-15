@@ -64,7 +64,6 @@ const HomePage = () => {
 
             {/* ⬇️ SECCIÓN DE CURSOS (GRID NUEVO) ⬇️ */}
             <div id="cursos" className="section-container">
-                <h2 className="section-title">Nuestros Cursos</h2>
                 <CourseGrid courses={cursosVisibles} />
             </div>
 
