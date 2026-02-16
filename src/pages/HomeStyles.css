@@ -1,35 +1,51 @@
-/* src/pages/HomeStyles.css */
+/* src/pages/HomeStyles.css - Paleta Suavizada (menos cansancio visual) */
 
 :root {
-    /* Color Palette: Orange, Yellow, White/Black */
-    --primary-orange: #FF9800;
-    /* Bright Orange */
-    --primary-dark: #F57C00;
-    /* Darker Orange for hover/active */
-    --accent-yellow: #FFEB3B;
-    /* Bright Yellow */
-    --accent-gold: #FBC02D;
-    /* Golden Yellow */
+    /* Paleta Suavizada: Naranja Coral + Verde Suave + Neutros Cálidos */
+    --primary-orange: #FF8A5B;
+    /* Naranja coral suave (antes #FF9800) */
+    --primary-dark: #D97757;
+    /* Terracota para hover (antes #F57C00) */
+    --accent-yellow: #FFB74D;
+    /* Ámbar suave (antes #FFEB3B) */
+    --accent-gold: #F4D078;
+    /* Dorado suave (antes #FBC02D) */
+    --accent-green: #7AB547;
+    /* Verde suave de Platzi */
 
-    /* Light Mode Defaults */
-    --bg-color: #ffffff;
-    --text-color: #333333;
-    --card-bg: #f5f5f5;
-    --card-border: #e0e0e0;
-    --navbar-bg: rgba(255, 255, 255, 0.95);
-    --hero-gradient: linear-gradient(135deg, #FFF3E0 0%, #FFFFFF 100%);
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Light Mode - Con más color y personalidad */
+    --bg-color: #E5EBF0;
+    /* Azul grisáceo con más saturación */
+    --text-color: #2D3748;
+    /* Gris oscuro para buen contraste */
+    --card-bg: #FFFFFF;
+    /* Blanco puro para cards (mejor contraste) */
+    --card-border: #C8D4E0;
+    /* Azul gris más visible */
+    --navbar-bg: rgba(229, 235, 240, 0.98);
+    /* Navbar con color azul suave */
+    --hero-gradient: linear-gradient(135deg, #FFE9DD 0%, #E5EBF0 100%);
+    /* Degradado naranja suave a azul */
+    --shadow: 0 4px 12px rgba(255, 138, 91, 0.15);
+    /* Sombra con tinte coral más visible */
 }
 
 [data-theme='dark'] {
-    /* Dark Mode Overrides */
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --card-bg: #1e1e1e;
-    --card-border: #333333;
-    --navbar-bg: rgba(18, 18, 18, 0.95);
-    --hero-gradient: linear-gradient(180deg, rgba(255, 152, 0, 0.1) 0%, #121212 100%);
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    /* Dark Mode - Tonos menos agresivos */
+    --bg-color: #1A2332;
+    /* Gris azulado oscuro (antes #121212 negro puro) */
+    --text-color: #EDF2F7;
+    /* Gris perla claro (antes #e0e0e0) */
+    --card-bg: #2C3E50;
+    /* Azul oscuro suave (antes #1e1e1e) */
+    --card-border: #4A5568;
+    /* Gris medio (antes #333333) */
+    --navbar-bg: rgba(44, 74, 109, 0.95);
+    /* Azul profundo (antes negro) */
+    --hero-gradient: linear-gradient(180deg, rgba(255, 138, 91, 0.08) 0%, #1A2332 100%);
+    /* Degradado más suave */
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    /* Sombra menos intensa */
 }
 
 body {
@@ -64,6 +80,7 @@ body {
 
 .dot {
     color: var(--primary-orange);
+    /* Ahora es naranja coral suave */
 }
 
 .nav-links {
@@ -82,6 +99,7 @@ body {
 
 .nav-links a:hover {
     color: var(--primary-orange);
+    /* Naranja coral en hover */
 }
 
 .theme-toggle {
@@ -113,7 +131,8 @@ body {
 .btn-login:hover {
     background-color: var(--primary-orange);
     color: white;
-    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(255, 138, 91, 0.3);
+    /* Sombra más suave */
 }
 
 /* HERO */
@@ -125,6 +144,11 @@ body {
     overflow: hidden;
 }
 
+/* Hero con más color en modo claro */
+[data-theme='light'] .hero {
+    background: linear-gradient(135deg, #FFE9DD 0%, #FFD4B8 20%, #E5EBF0 100%);
+}
+
 .hero h1 {
     font-size: 3.5rem;
     margin-bottom: 1.5rem;
@@ -134,6 +158,7 @@ body {
 
 .highlight {
     color: var(--primary-orange);
+    /* Naranja coral */
     position: relative;
     display: inline-block;
 }
@@ -146,7 +171,9 @@ body {
     width: 100%;
     height: 10px;
     background-color: var(--accent-yellow);
-    opacity: 0.4;
+    /* Ámbar suave */
+    opacity: 0.3;
+    /* Reducida opacidad para menos saturación */
     z-index: -1;
     transform: skewX(-10deg);
 }
@@ -155,12 +182,14 @@ body {
     font-size: 1.2rem;
     max-width: 700px;
     margin: 0 auto 2rem;
-    opacity: 0.9;
+    opacity: 0.85;
+    /* Ligeramente más suave */
     animation: fadeInUp 1s ease-out 0.3s backwards;
 }
 
 .btn-cta {
     background: linear-gradient(45deg, var(--primary-orange), var(--primary-dark));
+    /* Degradado coral a terracota */
     color: white;
     border: none;
     padding: 14px 40px;
@@ -168,14 +197,16 @@ body {
     border-radius: 50px;
     cursor: pointer;
     font-weight: 700;
-    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.5);
+    box-shadow: 0 4px 15px rgba(255, 138, 91, 0.3);
+    /* Sombra más suave */
     transition: transform 0.3s, box-shadow 0.3s;
     animation: fadeInUp 1s ease-out 0.6s backwards;
 }
 
 .btn-cta:hover {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.6);
+    box-shadow: 0 8px 25px rgba(255, 138, 91, 0.4);
+    /* Sombra suavizada */
 }
 
 /* SECTIONS */
@@ -198,6 +229,7 @@ body {
     width: 60px;
     height: 4px;
     background-color: var(--primary-orange);
+    /* Línea naranja coral */
     margin: 10px auto 0;
     border-radius: 2px;
 }
@@ -218,15 +250,24 @@ body {
     border-radius: 20px;
     width: 320px;
     text-align: center;
-    border: 1px solid var(--card-border);
+    border: 2px solid var(--primary-orange);
+    /* BORDE NARANJA PARA TODAS LAS CARDS */
     box-shadow: var(--shadow);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s;
 }
 
 .pricing-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    border-color: var(--primary-orange);
+    box-shadow: 0 15px 30px rgba(255, 138, 91, 0.15);
+    /* Sombra con tinte coral suave */
+    border-color: var(--primary-dark);
+    /* Borde más oscuro en hover */
+}
+
+/* Hover más colorido en modo claro */
+[data-theme='light'] .pricing-card:hover {
+    box-shadow: 0 15px 40px rgba(255, 138, 91, 0.25);
+    background-color: #FFF9F5;
 }
 
 .pricing-card.featured {
@@ -234,6 +275,8 @@ body {
     position: relative;
     transform: scale(1.05);
     z-index: 1;
+    box-shadow: 0 8px 25px rgba(255, 138, 91, 0.2);
+    /* Sombra más intensa para destacar */
 }
 
 .pricing-card.featured:hover {
@@ -249,7 +292,15 @@ body {
     font-size: 3rem;
     font-weight: 800;
     color: var(--primary-orange);
+    /* Precio en naranja coral */
     margin: 1rem 0;
+}
+
+.duration {
+    color: var(--text-color);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
 }
 
 .benefits {
@@ -264,9 +315,16 @@ body {
     font-size: 1rem;
 }
 
+.benefits li::before {
+    content: '✓ ';
+    color: var(--accent-green);
+    /* Check verde suave de Platzi */
+    font-weight: bold;
+    margin-right: 8px;
+}
+
 .btn-subscribe {
     background-color: var(--text-color);
-    /* Inverted for contrast */
     color: var(--bg-color);
     width: 100%;
     padding: 12px;
@@ -274,11 +332,14 @@ body {
     border-radius: 10px;
     font-weight: 700;
     cursor: pointer;
-    transition: opacity 0.3s;
+    transition: all 0.3s;
 }
 
 .btn-subscribe:hover {
-    opacity: 0.9;
+    background-color: var(--primary-orange);
+    /* Hover naranja coral */
+    color: white;
+    transform: translateY(-2px);
 }
 
 /* LOADING */
@@ -338,4 +399,44 @@ body {
     border-top: 1px solid var(--card-border);
     margin-top: 4rem;
     opacity: 0.7;
+}
+
+/* NUEVAS CLASES OPCIONALES PARA ELEMENTOS ESPECÍFICOS */
+
+/* Para botones "VER CONTENIDO" en cards de cursos */
+.btn-view-content {
+    color: var(--accent-yellow);
+    /* Ámbar suave */
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+}
+
+.btn-view-content:hover {
+    color: var(--primary-orange);
+    /* Naranja coral en hover */
+}
+
+/* Para badges o etiquetas de categorías */
+.category-badge {
+    background-color: var(--primary-orange);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Para elementos con acento verde (éxito, completado) */
+.success-indicator {
+    color: var(--accent-green);
+}
+
+/* Versión alternativa de cards con borde verde */
+.card-success {
+    border-left: 4px solid var(--accent-green);
 }
