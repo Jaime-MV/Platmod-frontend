@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
-import { getCursos, getPlanes, updateCurso, asignarDocente, getAllDocentes, getDocentesParaAsignacion, createCurso, deleteCurso } from '../../services/api';
+import { getCursos, getPlanes, updateCurso, updateDocentesAsignacion, getDocentesParaAsignacion, createCurso, deleteCurso } from '../../services/api';
 import './AdminStyles.css';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('cursos');
   const [cursos, setCursos] = useState([]);
   const [planes, setPlanes] = useState([]);
   const [loading, setLoading] = useState(true);
+
+
 
   // --- ESTADOS PARA MODALES ---
   const [showDocenteModal, setShowDocenteModal] = useState(false);
@@ -15,7 +18,9 @@ const AdminDashboard = () => {
 
   // --- ESTADOS DE DATOS ---
   const [selectedCursoId, setSelectedCursoId] = useState(null);
-  const [docentes, setDocentes] = useState([]);
+  const [docentes, setDocentes] = useState([]); // Mantener si se usa en otro lado, o eliminar
+  const [availableDocentes, setAvailableDocentes] = useState([]);
+  const [assignedDocentes, setAssignedDocentes] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
 
   // --- ESTADO PARA EL NUEVO CURSO ---
@@ -118,23 +123,55 @@ const AdminDashboard = () => {
   const openAsignarModal = async (idCurso) => {
     setSelectedCursoId(idCurso);
     setShowDocenteModal(true);
-    setSearchTerm(""); // Limpiar búsqueda
-    // Ahora llamamos al endpoint que trae el estado de asignación
-    const dataDocentes = await getDocentesParaAsignacion(idCurso);
-    setDocentes(dataDocentes);
+    setSearchTerm("");
+
+    // Obtener datos
+    const allDocentes = await getDocentesParaAsignacion(idCurso);
+
+    // Separar en dos listas
+    setAvailableDocentes(allDocentes.filter(d => !d.asignado));
+    setAssignedDocentes(allDocentes.filter(d => d.asignado));
   };
 
-  const confirmarAsignacion = async (idDocente) => {
-    try {
-      await asignarDocente(selectedCursoId, idDocente);
-      alert("¡Docente asignado correctamente!");
-      setShowDocenteModal(false);
-    } catch (error) {
-      alert("Error al asignar docente.");
+  // --- LÓGICA DRAG AND DROP ---
+  const onDragEnd = (result) => {
+    const { source, destination } = result;
+
+    if (!destination) return;
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+
+    // Helper para obtener la lista correcta según ID
+    const getList = (id) => id === 'available' ? availableDocentes : assignedDocentes;
+
+    let sourceList = Array.from(getList(source.droppableId));
+    let destList = source.droppableId === destination.droppableId ? sourceList : Array.from(getList(destination.droppableId));
+
+    const [movedItem] = sourceList.splice(source.index, 1);
+    destList.splice(destination.index, 0, movedItem);
+
+    if (source.droppableId === 'available') {
+      setAvailableDocentes(sourceList);
+      if (destination.droppableId === 'assigned') setAssignedDocentes(destList);
+    } else {
+      setAssignedDocentes(sourceList);
+      if (destination.droppableId === 'available') setAvailableDocentes(destList);
     }
   };
 
-  const docentesFiltrados = docentes.filter(d =>
+  const handleSaveChanges = async () => {
+    try {
+      const assignedIds = assignedDocentes.map(d => d.idUsuario);
+      await updateDocentesAsignacion(selectedCursoId, assignedIds);
+      alert("¡Asignaciones actualizadas correctamente!");
+      setShowDocenteModal(false);
+      fetchData();
+    } catch (error) {
+      alert("Error al guardar cambios.");
+    }
+  };
+
+  // Filtro solo para la lista de disponibles (opcional)
+  const availableFiltered = availableDocentes.filter(d =>
     d.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -254,32 +291,99 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* --- MODAL 2: ASIGNAR DOCENTE --- */}
+      {/* --- MODAL 2: ASIGNAR DOCENTE (DRAG AND DROP) --- */}
       {showDocenteModal && (
         <div className="modal-overlay">
-          <div className="modal-content">
+          <div className="modal-content modal-lg">
             <div className="modal-header">
-              <h3>Seleccionar Docente</h3>
+              <h3>Gestionar Docentes</h3>
               <button className="close-btn" onClick={() => setShowDocenteModal(false)}>×</button>
             </div>
-            <input type="text" placeholder="Buscar..." className="search-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-            <div className="docentes-list">
-              {docentesFiltrados.map(docente => (
-                <div key={docente.idUsuario} className="docente-item">
-                  <div className="docente-info">
-                    <span className="docente-name">{docente.nombre}</span>
-                    <small style={{ color: '#f59e0b' }}>{docente.especialidad || 'Sin especialidad'}</small>
-                  </div>
-                  <button
-                    className={`btn-gold-sm ${docente.asignado ? 'btn-disabled' : ''}`}
-                    disabled={docente.asignado}
-                    onClick={() => confirmarAsignacion(docente.idUsuario)}
-                  >
-                    {docente.asignado ? '✅ Asignado' : 'Asignar'}
-                  </button>
+
+            <p className="modal-subtitle">Arrastra los docentes para asignarlos al curso.</p>
+
+            <DragDropContext onDragEnd={onDragEnd}>
+              <div className="dnd-container">
+                {/* COLUMNA DISPONIBLES */}
+                <div className="dnd-column">
+                  <h4>Disponibles</h4>
+                  <input
+                    type="text"
+                    placeholder="Buscar..."
+                    className="search-input-sm"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                  />
+                  <Droppable droppableId="available">
+                    {(provided) => (
+                      <div
+                        className="dnd-list"
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                      >
+                        {availableFiltered.map((docente, index) => (
+                          <Draggable key={docente.idUsuario} draggableId={String(docente.idUsuario)} index={index}>
+                            {(provided) => (
+                              <div
+                                className="dnd-item"
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              >
+                                <div className="docente-info">
+                                  <span className="docente-name">{docente.nombre}</span>
+                                  <small style={{ color: '#f59e0b' }}>{docente.especialidad}</small>
+                                </div>
+                                <span className="drag-handle">::::</span>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
                 </div>
-              ))}
-              {docentesFiltrados.length === 0 && <p className="text-center text-muted">No se encontraron docentes.</p>}
+
+                {/* COLUMNA ASIGNADOS */}
+                <div className="dnd-column">
+                  <h4>Asignados</h4>
+                  <Droppable droppableId="assigned">
+                    {(provided) => (
+                      <div
+                        className="dnd-list assigned-list"
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                      >
+                        {assignedDocentes.map((docente, index) => (
+                          <Draggable key={docente.idUsuario} draggableId={String(docente.idUsuario)} index={index}>
+                            {(provided) => (
+                              <div
+                                className="dnd-item"
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                              >
+                                <div className="docente-info">
+                                  <span className="docente-name">{docente.nombre}</span>
+                                  <small style={{ color: '#f59e0b' }}>{docente.especialidad}</small>
+                                </div>
+                                <span>✅</span>
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </div>
+              </div>
+            </DragDropContext>
+
+            <div className="modal-actions">
+              <button className="btn-cancel" onClick={() => setShowDocenteModal(false)}>Cancelar</button>
+              <button className="btn-primary" onClick={handleSaveChanges}>Guardar Cambios</button>
             </div>
           </div>
         </div>

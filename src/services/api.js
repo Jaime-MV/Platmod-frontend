@@ -129,6 +129,16 @@ export const getDocentesParaAsignacion = async (idCurso) => {
     }
 };
 
+// Actualizar asignaciones masivamente (Drag & Drop)
+export const updateDocentesAsignacion = async (idCurso, docentesIds) => {
+    const response = await fetch(`${API_URL}/admin/cursos/${idCurso}/asignaciones`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(docentesIds)
+    });
+    return response.ok;
+};
+
 // Crear nuevo curso
 export const createCurso = async (cursoData) => {
     const response = await fetch(`${API_URL}/admin/cursos`, {
