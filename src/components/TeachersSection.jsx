@@ -22,36 +22,51 @@ const TeachersSection = () => {
           Nuestros profesores son <span className="highlight">expertos de la industria</span>
         </h2>
 
-        {/* Usamos un contenedor con scroll horizontal (tipo carrusel simple) */}
-        <div className="teachers-grid">
-          {docentes.map((docente) => (
-            <div key={docente.idDocente} className="teacher-card">
-              <div className="teacher-image-wrapper">
-                <img
-                  src={docente.fotoUrl || "https://via.placeholder.com/300x400"}
-                  alt={docente.nombre}
-                  className="teacher-image"
-                />
-              </div>
+        <div className="carousel-wrapper" style={{ position: 'relative' }}>
+          <button
+            className="carousel-btn prev"
+            onClick={() => document.querySelector('.teachers-grid').scrollBy({ left: -300, behavior: 'smooth' })}
+          >
+            &#8249;
+          </button>
 
-              <div className="teacher-info">
-                <h3 className="teacher-name">{docente.nombre}</h3>
-                <p className="teacher-specialty">{docente.especialidad}</p>
+          <div className="teachers-grid">
+            {docentes.map((docente) => (
+              <div key={docente.idDocente} className="teacher-card">
+                <div className="teacher-image-wrapper">
+                  <img
+                    src={docente.fotoUrl && !docente.fotoUrl.includes('?text=C:') ? docente.fotoUrl : "https://via.placeholder.com/300x400?text=Docente"}
+                    alt={docente.nombre}
+                    className="teacher-image"
+                    onError={(e) => { e.target.onerror = null; e.target.src = "https://via.placeholder.com/300x400?text=Docente"; }}
+                  />
+                </div>
 
-                {docente.cursoTitulo && (
-                  <div className="teacher-course">
-                    <span className="course-icon">🚀</span>
-                    {/* Cortamos el título si es muy largo para que no rompa el diseño */}
-                    <span className="course-name">
-                      {docente.cursoTitulo.length > 25
-                        ? docente.cursoTitulo.substring(0, 25) + '...'
-                        : docente.cursoTitulo}
-                    </span>
-                  </div>
-                )}
+                <div className="teacher-info">
+                  <h3 className="teacher-name">{docente.nombre}</h3>
+                  <p className="teacher-specialty">{docente.especialidad}</p>
+
+                  {docente.cursoTitulo && (
+                    <div className="teacher-course">
+                      <span className="course-icon">🚀</span>
+                      <span className="course-name">
+                        {docente.cursoTitulo.length > 25
+                          ? docente.cursoTitulo.substring(0, 25) + '...'
+                          : docente.cursoTitulo}
+                      </span>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <button
+            className="carousel-btn next"
+            onClick={() => document.querySelector('.teachers-grid').scrollBy({ left: 300, behavior: 'smooth' })}
+          >
+            &#8250;
+          </button>
         </div>
       </div>
     </section>
