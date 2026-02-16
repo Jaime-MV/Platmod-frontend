@@ -114,6 +114,21 @@ export const asignarDocente = async (idCurso, idUsuario) => {
     return response.ok;
 };
 
+// Obtener docentes con estado de asignación para un curso específico
+export const getDocentesParaAsignacion = async (idCurso) => {
+    try {
+        const response = await fetch(`${API_URL}/admin/cursos/${idCurso}/docentes-asignacion`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Error al cargar docentes para asignación');
+        return await response.json();
+    } catch (error) {
+        console.error("Error getDocentesParaAsignacion:", error);
+        return [];
+    }
+};
+
 // Crear nuevo curso
 export const createCurso = async (cursoData) => {
     const response = await fetch(`${API_URL}/admin/cursos`, {
