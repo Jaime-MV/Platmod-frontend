@@ -34,33 +34,33 @@
   display: flex;
   gap: 30px;
   overflow-x: auto;
-  padding: 20px 10px 40px 10px;
-  /* Padding extra abajo para la sombra */
-  scrollbar-width: thin;
-  justify-content: center;
-  /* Centrar si son pocos */
-  flex-wrap: wrap;
-  /* Permitir wrap en desktop */
+  padding: 40px 20px;
+  /* Mas espacio para hover y scroll */
+  scroll-snap-type: x mandatory;
+  /* Snap horizontal */
+  flex-wrap: nowrap;
+  /* NO WRAP para carrusel */
+  justify-content: flex-start;
+  /* Alinear al inicio */
+  -webkit-overflow-scrolling: touch;
+  /* Smooth scroll en iOS */
 }
 
-/* Scrollbar personalizada */
+/* Scrollbar oculta pero funcional (opcional, si queremos botones) */
 .teachers-grid::-webkit-scrollbar {
-  height: 8px;
-}
-
-.teachers-grid::-webkit-scrollbar-track {
-  background: var(--bg-color);
-}
-
-.teachers-grid::-webkit-scrollbar-thumb {
-  background-color: var(--card-border);
-  border-radius: 10px;
+  height: 0px;
+  /* Ocultar scrollbar visual para estilo limpio */
+  background: transparent;
 }
 
 /* --- TARJETA DE DOCENTE --- */
 .teacher-card {
   width: 280px;
+  min-width: 280px;
+  /* Forzar ancho mínimo */
   flex-shrink: 0;
+  scroll-snap-align: center;
+  /* Centrar al soltar */
   background-color: var(--card-bg);
   border-radius: 20px;
   overflow: hidden;
@@ -149,4 +149,59 @@
   overflow: hidden;
   text-overflow: ellipsis;
   font-weight: 500;
+}
+
+/* --- BOTONES DEL CARRUSEL --- */
+.carousel-wrapper {
+  position: relative;
+  max-width: 100%;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.carousel-btn:hover {
+  background: var(--primary-orange);
+}
+
+.carousel-btn.prev {
+  left: -20px;
+}
+
+.carousel-btn.next {
+  right: -20px;
+}
+
+@media (max-width: 768px) {
+  .carousel-btn {
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    left: 0 !important;
+    right: 0 !important;
+  }
+
+  .carousel-btn.prev {
+    left: 0;
+  }
+
+  .carousel-btn.next {
+    right: 0;
+  }
 }
