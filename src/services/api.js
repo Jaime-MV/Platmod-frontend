@@ -106,6 +106,23 @@ export const updatePlan = async (id, planData) => {
     return await response.json();
 };
 
+export const addBeneficio = async (idPlan, descripcion) => {
+    const response = await fetch(`${API_URL}/admin/planes/${idPlan}/beneficios`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify({ descripcion })
+    });
+    return await response.json();
+};
+
+export const deleteBeneficio = async (idBeneficio) => {
+    const response = await fetch(`${API_URL}/admin/planes/beneficios/${idBeneficio}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+    });
+    return response.ok;
+};
+
 export const asignarDocente = async (idCurso, idUsuario) => {
     const response = await fetch(`${API_URL}/admin/cursos/${idCurso}/asignar-docente/${idUsuario}`, {
         method: 'POST',
