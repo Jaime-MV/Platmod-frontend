@@ -1,35 +1,67 @@
-/* src/pages/HomeStyles.css */
+/* src/pages/HomeStyles.css - Paleta Suavizada (menos cansancio visual) */
 
 :root {
-    /* Color Palette: Orange, Yellow, White/Black */
-    --primary-orange: #FF9800;
-    /* Bright Orange */
-    --primary-dark: #F57C00;
-    /* Darker Orange for hover/active */
-    --accent-yellow: #FFEB3B;
-    /* Bright Yellow */
-    --accent-gold: #FBC02D;
-    /* Golden Yellow */
+    /* Paleta Suavizada: Naranja Coral + Verde Suave + Neutros Cálidos */
+    --primary-orange: #FF8A5B;
+    /* Naranja coral suave (antes #FF9800) */
+    --primary-dark: #D97757;
+    /* Terracota para hover (antes #F57C00) */
+    --accent-yellow: #FFB74D;
+    /* Ámbar suave (antes #FFEB3B) */
+    --accent-gold: #F4D078;
+    /* Dorado suave (antes #FBC02D) */
+    --accent-green: #7AB547;
+    /* Verde suave de Platzi */
 
-    /* Light Mode Defaults */
-    --bg-color: #ffffff;
-    --text-color: #333333;
-    --card-bg: #f5f5f5;
-    --card-border: #e0e0e0;
-    --navbar-bg: rgba(255, 255, 255, 0.95);
-    --hero-gradient: linear-gradient(135deg, #FFF3E0 0%, #FFFFFF 100%);
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    /* Light Mode - Con más color y personalidad */
+    --bg-color: #E5EBF0;
+    /* Azul grisáceo con más saturación */
+    --text-color: #2D3748;
+    /* Gris oscuro para buen contraste */
+    --card-bg: #FFFFFF;
+    /* Blanco puro para cards (mejor contraste) */
+    --card-border: #C8D4E0;
+    /* Azul gris más visible */
+    --navbar-bg: rgba(229, 235, 240, 0.98);
+    /* Navbar con color azul suave */
+    --hero-gradient: linear-gradient(135deg, #FFE9DD 0%, #E5EBF0 100%);
+    /* Degradado naranja suave a azul */
+    --shadow: 0 4px 12px rgba(255, 138, 91, 0.15);
+    /* Sombra con tinte coral más visible */
 }
 
 [data-theme='dark'] {
-    /* Dark Mode Overrides */
-    --bg-color: #121212;
-    --text-color: #e0e0e0;
-    --card-bg: #1e1e1e;
-    --card-border: #333333;
-    --navbar-bg: rgba(18, 18, 18, 0.95);
-    --hero-gradient: linear-gradient(180deg, rgba(255, 152, 0, 0.1) 0%, #121212 100%);
-    --shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    /* Dark Mode - Ultra Premium con profundidad y contraste perfecto */
+    --bg-color: #0A0E14;
+    /* Negro profundo con tinte azul */
+    --text-color: #FAFBFC;
+    /* Blanco puro para máxima legibilidad */
+    --card-bg: #151B26;
+    /* Azul navy muy oscuro para cards */
+    --card-border: #1F2937;
+    /* Borde sutil pero visible */
+    --navbar-bg: rgba(21, 27, 38, 0.98);
+    /* Navbar con profundidad */
+    --hero-gradient: linear-gradient(135deg, 
+        rgba(255, 158, 122, 0.15) 0%, 
+        rgba(255, 138, 91, 0.08) 20%,
+        #0A0E14 50%,
+        rgba(26, 35, 50, 0.3) 100%);
+    /* Degradado complejo con múltiples capas */
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    /* Sombras ultra profundas */
+    
+    /* Acentos premium ultra vibrantes */
+    --primary-orange: #FFA87A;
+    /* Naranja melocotón brillante */
+    --primary-dark: #FF8A5B;
+    /* Coral intenso */
+    --accent-green: #9FE870;
+    /* Verde lima brillante */
+    --accent-yellow: #FFC966;
+    /* Amarillo dorado */
+    --accent-blue: #6AB7FF;
+    /* Azul cielo */
 }
 
 body {
@@ -38,6 +70,95 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     transition: background-color 0.3s ease, color 0.3s ease;
+    position: relative;
+}
+
+/* Resplandor en los bordes de la pantalla en dark mode */
+[data-theme='dark'] body {
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 168, 122, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(159, 232, 112, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(106, 183, 255, 0.02) 0%, transparent 50%);
+    background-attachment: fixed;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* Viñeta de resplandor en los bordes */
+[data-theme='dark'] body::before,
+[data-theme='dark'] body::after {
+    content: '';
+    position: fixed;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    filter: blur(60px);
+}
+
+[data-theme='dark'] body::before {
+    background: radial-gradient(circle, rgba(255, 168, 122, 0.15) 0%, transparent 70%);
+    top: -100px;
+    left: -100px;
+    animation: float-particle-1 20s ease-in-out infinite;
+}
+
+[data-theme='dark'] body::after {
+    background: radial-gradient(circle, rgba(159, 232, 112, 0.12) 0%, transparent 70%);
+    bottom: -100px;
+    right: -100px;
+    animation: float-particle-2 25s ease-in-out infinite;
+}
+
+@keyframes float-particle-1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(30vw, 20vh) scale(1.2); }
+    50% { transform: translate(50vw, 40vh) scale(0.8); }
+    75% { transform: translate(20vw, 60vh) scale(1.1); }
+}
+
+@keyframes float-particle-2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(-40vw, -30vh) scale(1.3); }
+    66% { transform: translate(-20vw, -50vh) scale(0.9); }
+}
+
+/* Estrellas parpadeantes en dark mode */
+[data-theme='dark'] .home-container {
+    position: relative;
+}
+
+[data-theme='dark'] .home-container::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+        radial-gradient(1px 1px at 20% 30%, rgba(255, 255, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 60% 70%, rgba(255, 168, 122, 0.3), transparent),
+        radial-gradient(1px 1px at 50% 50%, rgba(159, 232, 112, 0.3), transparent),
+        radial-gradient(1px 1px at 80% 10%, rgba(106, 183, 255, 0.3), transparent),
+        radial-gradient(1px 1px at 90% 60%, rgba(255, 255, 255, 0.2), transparent),
+        radial-gradient(1px 1px at 33% 80%, rgba(255, 168, 122, 0.2), transparent);
+    background-size: 200% 200%;
+    animation: twinkle 10s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.5;
+}
+
+@keyframes twinkle {
+    0%, 100% {
+        opacity: 0.3;
+        background-position: 0% 0%;
+    }
+    50% {
+        opacity: 0.7;
+        background-position: 100% 100%;
+    }
 }
 
 /* NAVBAR */
@@ -55,6 +176,35 @@ body {
     transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
+/* Navbar mejorada en dark mode */
+[data-theme='dark'] .navbar {
+    background: linear-gradient(180deg, rgba(21, 27, 38, 0.98) 0%, rgba(15, 20, 25, 0.95) 100%);
+    border-bottom: 1px solid rgba(255, 168, 122, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5),
+                0 1px 0 rgba(255, 168, 122, 0.1) inset;
+}
+
+/* Logo con efecto glow en dark mode */
+[data-theme='dark'] .logo {
+    text-shadow: 0 0 20px rgba(255, 168, 122, 0.3);
+}
+
+/* Links del navbar con animación de glow */
+[data-theme='dark'] .nav-links a {
+    color: #CBD5E1;
+    position: relative;
+}
+
+[data-theme='dark'] .nav-links a:hover {
+    color: #FFA87A;
+    text-shadow: 0 0 10px rgba(255, 168, 122, 0.5);
+}
+
+[data-theme='dark'] .nav-links a::after {
+    background: linear-gradient(90deg, transparent, #FFA87A, transparent);
+    box-shadow: 0 0 8px rgba(255, 168, 122, 0.6);
+}
+
 .logo {
     font-weight: 800;
     font-size: 1.8rem;
@@ -64,6 +214,7 @@ body {
 
 .dot {
     color: var(--primary-orange);
+    /* Ahora es naranja coral suave */
 }
 
 .nav-links {
@@ -82,6 +233,7 @@ body {
 
 .nav-links a:hover {
     color: var(--primary-orange);
+    /* Naranja coral en hover */
 }
 
 .theme-toggle {
@@ -99,6 +251,18 @@ body {
     transform: rotate(15deg) scale(1.1);
 }
 
+/* Theme toggle mejorado en dark mode */
+[data-theme='dark'] .theme-toggle {
+    background: rgba(255, 168, 122, 0.1);
+    color: #FFA87A;
+}
+
+[data-theme='dark'] .theme-toggle:hover {
+    background: rgba(255, 168, 122, 0.2);
+    box-shadow: 0 0 20px rgba(255, 168, 122, 0.4);
+    transform: rotate(180deg) scale(1.2);
+}
+
 .btn-login {
     background-color: transparent;
     border: 2px solid var(--primary-orange);
@@ -113,7 +277,39 @@ body {
 .btn-login:hover {
     background-color: var(--primary-orange);
     color: white;
-    box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+    box-shadow: 0 4px 12px rgba(255, 138, 91, 0.3);
+    /* Sombra más suave */
+}
+
+/* Botón login más vibrante en dark mode */
+[data-theme='dark'] .btn-login {
+    border-color: #FFA87A;
+    color: #FFA87A;
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme='dark'] .btn-login::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 168, 122, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+[data-theme='dark'] .btn-login:hover::before {
+    left: 100%;
+}
+
+[data-theme='dark'] .btn-login:hover {
+    background: linear-gradient(135deg, #FFA87A, #FF8A5B);
+    border-color: #FFA87A;
+    box-shadow: 0 4px 25px rgba(255, 168, 122, 0.5),
+                0 0 30px rgba(255, 168, 122, 0.3);
+    transform: translateY(-2px);
 }
 
 /* HERO */
@@ -125,6 +321,80 @@ body {
     overflow: hidden;
 }
 
+/* Hero con más color en modo claro */
+[data-theme='light'] .hero {
+    background: linear-gradient(135deg, #FFE9DD 0%, #FFD4B8 20%, #E5EBF0 100%);
+}
+
+/* Hero premium en dark mode con capas de color */
+[data-theme='dark'] .hero {
+    position: relative;
+    background: linear-gradient(135deg, 
+        rgba(255, 168, 122, 0.12) 0%, 
+        rgba(159, 232, 112, 0.05) 30%,
+        #0A0E14 60%);
+    overflow: hidden;
+}
+
+[data-theme='dark'] .hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 168, 122, 0.1) 0%, transparent 70%);
+    animation: rotate 30s linear infinite;
+    pointer-events: none;
+}
+
+/* Aurora boreal sutil */
+[data-theme='dark'] .hero::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(159, 232, 112, 0.08) 25%,
+        rgba(255, 168, 122, 0.08) 50%,
+        rgba(106, 183, 255, 0.08) 75%,
+        transparent 100%
+    );
+    animation: aurora 15s ease-in-out infinite;
+    pointer-events: none;
+    opacity: 0.6;
+}
+
+@keyframes aurora {
+    0%, 100% {
+        transform: translateX(0) skewX(-10deg);
+        opacity: 0.4;
+    }
+    50% {
+        transform: translateX(30%) skewX(10deg);
+        opacity: 0.8;
+    }
+}
+
+[data-theme='dark'] .hero h1 {
+    text-shadow: 0 0 40px rgba(255, 168, 122, 0.2);
+    position: relative;
+    z-index: 2;
+}
+
+[data-theme='dark'] .hero p {
+    position: relative;
+    z-index: 2;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
 .hero h1 {
     font-size: 3.5rem;
     margin-bottom: 1.5rem;
@@ -134,6 +404,7 @@ body {
 
 .highlight {
     color: var(--primary-orange);
+    /* Naranja coral */
     position: relative;
     display: inline-block;
 }
@@ -146,7 +417,9 @@ body {
     width: 100%;
     height: 10px;
     background-color: var(--accent-yellow);
-    opacity: 0.4;
+    /* Ámbar suave */
+    opacity: 0.3;
+    /* Reducida opacidad para menos saturación */
     z-index: -1;
     transform: skewX(-10deg);
 }
@@ -155,12 +428,14 @@ body {
     font-size: 1.2rem;
     max-width: 700px;
     margin: 0 auto 2rem;
-    opacity: 0.9;
+    opacity: 0.85;
+    /* Ligeramente más suave */
     animation: fadeInUp 1s ease-out 0.3s backwards;
 }
 
 .btn-cta {
     background: linear-gradient(45deg, var(--primary-orange), var(--primary-dark));
+    /* Degradado coral a terracota */
     color: white;
     border: none;
     padding: 14px 40px;
@@ -168,14 +443,105 @@ body {
     border-radius: 50px;
     cursor: pointer;
     font-weight: 700;
-    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.5);
+    box-shadow: 0 4px 15px rgba(255, 138, 91, 0.3);
+    /* Sombra más suave */
     transition: transform 0.3s, box-shadow 0.3s;
     animation: fadeInUp 1s ease-out 0.6s backwards;
 }
 
 .btn-cta:hover {
     transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.6);
+    box-shadow: 0 8px 25px rgba(255, 138, 91, 0.4);
+    /* Sombra suavizada */
+}
+
+/* CTA button con glow en dark mode */
+[data-theme='dark'] .btn-cta {
+    background: linear-gradient(135deg, #FFA87A 0%, #FF8A5B 50%, #FF7043 100%);
+    box-shadow: 
+        0 4px 20px rgba(255, 168, 122, 0.5),
+        0 0 40px rgba(255, 168, 122, 0.3),
+        0 0 60px rgba(255, 168, 122, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme='dark'] .btn-cta::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, 
+        transparent 30%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        transparent 70%);
+    animation: shimmer 3s infinite;
+}
+
+/* Ondas de energía al hacer hover */
+[data-theme='dark'] .btn-cta::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease-out, height 0.6s ease-out, opacity 0.6s ease-out;
+    opacity: 0;
+    z-index: 0;
+}
+
+[data-theme='dark'] .btn-cta:hover::after {
+    width: 400px;
+    height: 400px;
+    opacity: 0;
+}
+
+[data-theme='dark'] .btn-cta:hover {
+    box-shadow: 
+        0 8px 35px rgba(255, 168, 122, 0.6),
+        0 0 50px rgba(255, 168, 122, 0.4),
+        0 0 80px rgba(255, 168, 122, 0.2),
+        0 0 120px rgba(255, 168, 122, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transform: translateY(-4px) scale(1.03);
+    animation: button-pulse 1.5s ease-in-out infinite;
+}
+
+[data-theme='dark'] .btn-cta:active {
+    transform: translateY(-2px) scale(0.98);
+    box-shadow: 
+        0 4px 20px rgba(255, 168, 122, 0.7),
+        0 0 30px rgba(255, 168, 122, 0.5),
+        inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes button-pulse {
+    0%, 100% {
+        box-shadow: 
+            0 8px 35px rgba(255, 168, 122, 0.6),
+            0 0 50px rgba(255, 168, 122, 0.4),
+            0 0 80px rgba(255, 168, 122, 0.2),
+            0 0 120px rgba(255, 168, 122, 0.1);
+    }
+    50% {
+        box-shadow: 
+            0 8px 35px rgba(255, 168, 122, 0.7),
+            0 0 60px rgba(255, 168, 122, 0.5),
+            0 0 100px rgba(255, 168, 122, 0.3),
+            0 0 150px rgba(255, 168, 122, 0.15);
+    }
+}
+
+@keyframes shimmer {
+    0% { transform: translate(-100%, -100%) rotate(45deg); }
+    100% { transform: translate(100%, 100%) rotate(45deg); }
 }
 
 /* SECTIONS */
@@ -183,6 +549,24 @@ body {
     padding: 2rem 2rem;
     max-width: 1200px;
     margin: 0 auto;
+    position: relative;
+    z-index: 1;
+}
+
+/* Efecto de aparición al hacer scroll en dark mode */
+[data-theme='dark'] .section-container {
+    animation: fadeInView 0.8s ease-out;
+}
+
+@keyframes fadeInView {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .section-title {
@@ -198,8 +582,36 @@ body {
     width: 60px;
     height: 4px;
     background-color: var(--primary-orange);
+    /* Línea naranja coral */
     margin: 10px auto 0;
     border-radius: 2px;
+}
+
+/* Section title con glow en dark mode */
+[data-theme='dark'] .section-title {
+    text-shadow: 0 0 30px rgba(255, 168, 122, 0.15);
+}
+
+[data-theme='dark'] .section-title::after {
+    background: linear-gradient(90deg, 
+        transparent 0%,
+        rgba(159, 232, 112, 0.6) 20%,
+        #FFA87A 50%,
+        rgba(106, 183, 255, 0.6) 80%,
+        transparent 100%);
+    box-shadow: 0 0 15px rgba(255, 168, 122, 0.6),
+                0 0 30px rgba(255, 168, 122, 0.3);
+    animation: slide-gradient 3s ease-in-out infinite;
+    height: 3px;
+}
+
+@keyframes slide-gradient {
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
 }
 
 /* PRICING */
@@ -209,6 +621,8 @@ body {
     gap: 2rem;
     flex-wrap: wrap;
     perspective: 1000px;
+    position: relative;
+    z-index: 1;
 }
 
 .pricing-card {
@@ -218,15 +632,133 @@ body {
     border-radius: 20px;
     width: 320px;
     text-align: center;
-    border: 1px solid var(--card-border);
+    border: 2px solid var(--primary-orange);
+    /* BORDE NARANJA PARA TODAS LAS CARDS */
     box-shadow: var(--shadow);
     transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.4s;
 }
 
 .pricing-card:hover {
     transform: translateY(-10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
-    border-color: var(--primary-orange);
+    box-shadow: 0 15px 30px rgba(255, 138, 91, 0.15);
+    /* Sombra con tinte coral suave */
+    border-color: var(--primary-dark);
+    /* Borde más oscuro en hover */
+}
+
+/* Hover más colorido en modo claro */
+[data-theme='light'] .pricing-card:hover {
+    box-shadow: 0 15px 40px rgba(255, 138, 91, 0.25);
+    background-color: #FFF9F5;
+}
+
+/* Pricing cards mejoradas en dark mode con efecto glow */
+[data-theme='dark'] .pricing-card {
+    background: linear-gradient(135deg, 
+        rgba(21, 27, 38, 0.8) 0%, 
+        rgba(31, 41, 55, 0.6) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    border: 2px solid rgba(255, 168, 122, 0.4);
+    box-shadow: 
+        0 8px 32px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(255, 168, 122, 0.1) inset,
+        0 0 60px rgba(255, 168, 122, 0.1);
+    position: relative;
+    transform-style: preserve-3d;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+[data-theme='dark'] .pricing-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, 
+        rgba(255, 138, 91, 0.3), 
+        transparent 50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+}
+
+[data-theme='dark'] .pricing-card:hover::before {
+    opacity: 0.5;
+}
+/* Efecto de luz que sigue al cursor */
+[data-theme='dark'] .pricing-card::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle 100px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+        rgba(255, 168, 122, 0.15),
+        transparent 50%
+    );
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 20px;
+    pointer-events: none;
+}
+
+[data-theme='dark'] .pricing-card:hover {
+    border-color: #FFA87A;
+    box-shadow: 
+        0 20px 70px rgba(0, 0, 0, 0.7),
+        0 0 80px rgba(255, 168, 122, 0.4),
+        0 0 120px rgba(255, 168, 122, 0.2),
+        0 0 200px rgba(255, 168, 122, 0.1);
+    background: linear-gradient(135deg, 
+        rgba(21, 27, 38, 0.95) 0%, 
+        rgba(31, 41, 55, 0.8) 100%);
+    transform: translateY(-15px) scale(1.03) rotateX(2deg);
+}
+
+[data-theme='dark'] .pricing-card:hover::before {
+    opacity: 1;
+}
+
+[data-theme='dark'] .pricing-card:hover::after {
+    opacity: 1;
+}
+
+/* Featured card ultra premium con animación orbital */
+[data-theme='dark'] .pricing-card.featured {
+    border-color: rgba(255, 168, 122, 0.8);
+    box-shadow: 
+        0 12px 50px rgba(0, 0, 0, 0.7),
+        0 0 100px rgba(255, 168, 122, 0.3),
+        0 0 150px rgba(255, 168, 122, 0.15);
+    animation: pulse-glow 4s ease-in-out infinite, featured-float 6s ease-in-out infinite;
+}
+
+@keyframes featured-float {
+    0%, 100% {
+        transform: scale(1.05) translateY(0);
+    }
+    50% {
+        transform: scale(1.05) translateY(-10px);
+    }
+}
+
+@keyframes pulse-glow {
+    0%, 100% {
+        box-shadow: 
+            0 12px 50px rgba(0, 0, 0, 0.7),
+            0 0 100px rgba(255, 168, 122, 0.3),
+            0 0 150px rgba(255, 168, 122, 0.15);
+    }
+    50% {
+        box-shadow: 
+            0 12px 50px rgba(0, 0, 0, 0.7),
+            0 0 120px rgba(255, 168, 122, 0.4),
+            0 0 180px rgba(255, 168, 122, 0.2);
+    }
 }
 
 .pricing-card.featured {
@@ -234,6 +766,8 @@ body {
     position: relative;
     transform: scale(1.05);
     z-index: 1;
+    box-shadow: 0 8px 25px rgba(255, 138, 91, 0.2);
+    /* Sombra más intensa para destacar */
 }
 
 .pricing-card.featured:hover {
@@ -245,11 +779,68 @@ body {
     margin-bottom: 1rem;
 }
 
+/* Títulos con efecto holográfico en dark mode */
+[data-theme='dark'] .pricing-card h3 {
+    background: linear-gradient(
+        45deg,
+        #FFA87A 0%,
+        #FFB899 25%,
+        #9FE870 50%,
+        #6AB7FF 75%,
+        #FFA87A 100%
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: holographic 8s ease-in-out infinite;
+    position: relative;
+    filter: drop-shadow(0 0 10px rgba(255, 168, 122, 0.3));
+}
+
+@keyframes holographic {
+    0%, 100% { background-position: 0% 50%; }
+    25% { background-position: 50% 100%; }
+    50% { background-position: 100% 50%; }
+    75% { background-position: 50% 0%; }
+}
+
 .price {
     font-size: 3rem;
     font-weight: 800;
     color: var(--primary-orange);
+    /* Precio en naranja coral */
     margin: 1rem 0;
+}
+
+/* Precio con glow en dark mode */
+[data-theme='dark'] .price {
+    background: linear-gradient(135deg, #FFA87A, #FFB899, #FFA87A);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 20px rgba(255, 168, 122, 0.4))
+            drop-shadow(0 0 40px rgba(255, 168, 122, 0.2));
+    animation: gradient-shift 3s ease infinite;
+}
+
+@keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.duration {
+    color: var(--text-color);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    opacity: 0.8;
+}
+
+/* Duration más visible en dark mode */
+[data-theme='dark'] .duration {
+    opacity: 0.7;
+    color: #94A3B8;
 }
 
 .benefits {
@@ -264,9 +855,35 @@ body {
     font-size: 1rem;
 }
 
+.benefits li::before {
+    content: '✓ ';
+    color: var(--accent-green);
+    /* Check verde suave de Platzi */
+    font-weight: bold;
+    margin-right: 8px;
+}
+
+/* Checkmarks más brillantes en dark mode */
+[data-theme='dark'] .benefits li::before {
+    color: #9FE870;
+    filter: drop-shadow(0 0 8px rgba(159, 232, 112, 0.5))
+            drop-shadow(0 0 15px rgba(159, 232, 112, 0.3));
+    animation: pulse-check 2s ease-in-out infinite;
+}
+
+@keyframes pulse-check {
+    0%, 100% {
+        filter: drop-shadow(0 0 8px rgba(159, 232, 112, 0.5))
+                drop-shadow(0 0 15px rgba(159, 232, 112, 0.3));
+    }
+    50% {
+        filter: drop-shadow(0 0 12px rgba(159, 232, 112, 0.7))
+                drop-shadow(0 0 20px rgba(159, 232, 112, 0.4));
+    }
+}
+
 .btn-subscribe {
     background-color: var(--text-color);
-    /* Inverted for contrast */
     color: var(--bg-color);
     width: 100%;
     padding: 12px;
@@ -274,11 +891,55 @@ body {
     border-radius: 10px;
     font-weight: 700;
     cursor: pointer;
-    transition: opacity 0.3s;
+    transition: all 0.3s;
 }
 
 .btn-subscribe:hover {
-    opacity: 0.9;
+    background-color: var(--primary-orange);
+    /* Hover naranja coral */
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Botón subscribe mejorado en dark mode */
+[data-theme='dark'] .btn-subscribe {
+    background: linear-gradient(135deg, 
+        rgba(31, 41, 55, 0.8) 0%, 
+        rgba(21, 27, 38, 0.9) 100%);
+    color: #FFA87A;
+    border: 1.5px solid rgba(255, 168, 122, 0.4);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 168, 122, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+[data-theme='dark'] .btn-subscribe::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 168, 122, 0.2) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+[data-theme='dark'] .btn-subscribe:hover::before {
+    opacity: 1;
+    animation: rotate 2s linear infinite;
+}
+
+[data-theme='dark'] .btn-subscribe:hover {
+    background: linear-gradient(135deg, #FFA87A 0%, #FF8A5B 50%, #FF7043 100%);
+    color: white;
+    border-color: #FFA87A;
+    box-shadow: 
+        0 6px 25px rgba(255, 168, 122, 0.5),
+        0 0 40px rgba(255, 168, 122, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-3px);
 }
 
 /* LOADING */
@@ -338,4 +999,56 @@ body {
     border-top: 1px solid var(--card-border);
     margin-top: 4rem;
     opacity: 0.7;
+}
+
+/* Footer premium en dark mode */
+[data-theme='dark'] .footer {
+    background: linear-gradient(180deg, transparent 0%, rgba(21, 27, 38, 0.5) 100%);
+    border-top: 1px solid rgba(255, 168, 122, 0.2);
+    box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme='dark'] .footer p {
+    color: #94A3B8;
+    text-shadow: 0 0 10px rgba(255, 168, 122, 0.1);
+}
+
+/* NUEVAS CLASES OPCIONALES PARA ELEMENTOS ESPECÍFICOS */
+
+/* Para botones "VER CONTENIDO" en cards de cursos */
+.btn-view-content {
+    color: var(--accent-yellow);
+    /* Ámbar suave */
+    font-weight: 600;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: color 0.2s;
+}
+
+.btn-view-content:hover {
+    color: var(--primary-orange);
+    /* Naranja coral en hover */
+}
+
+/* Para badges o etiquetas de categorías */
+.category-badge {
+    background-color: var(--primary-orange);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+}
+
+/* Para elementos con acento verde (éxito, completado) */
+.success-indicator {
+    color: var(--accent-green);
+}
+
+/* Versión alternativa de cards con borde verde */
+.card-success {
+    border-left: 4px solid var(--accent-green);
 }

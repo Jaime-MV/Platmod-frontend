@@ -116,7 +116,7 @@ const HomePage = () => {
             </section>
 
             <footer className="footer">
-                <p>© 2026 PlatMod. Hecho con ❤️ y Java Spring Boot.</p>
+                <p>© 2026 PlatMod. Hecho con  Java Spring Boot.</p>
             </footer>
         </div>
     );
