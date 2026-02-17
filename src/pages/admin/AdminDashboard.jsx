@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { getCursos, getPlanes, updateCurso, updateDocentesAsignacion, getDocentesParaAsignacion, createCurso, deleteCurso } from '../../services/api';
 import './AdminStyles.css';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+import AdminPlanes from './AdminPlanes';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('cursos');
@@ -247,9 +248,9 @@ const AdminDashboard = () => {
           </div>
         )}
 
-        {/* VISTA DE PLANES (Solo placeholder, tu código original iría aquí) */}
+        {/* VISTA DE PLANES */}
         {activeTab === 'planes' && (
-          <div className="section-header"><h1>Gestión de Planes</h1></div>
+          <AdminPlanes />
         )}
       </main>
 

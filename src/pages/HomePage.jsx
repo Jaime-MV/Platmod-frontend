@@ -74,19 +74,44 @@ const HomePage = () => {
             <section id="planes" className="section-container">
                 <h2 className="section-title">Planes de Suscripción</h2>
                 <div className="pricing-grid">
-                    {planes.map((plan) => (
-                        <div key={plan.idPlan} className={`pricing-card ${plan.nombre.includes('Expert') ? 'featured' : ''}`}>
-                            <h3>{plan.nombre}</h3>
-                            <div className="price">${plan.precio}</div>
-                            <p className="duration">cada {plan.duracionDias} días</p>
-                            <ul className="benefits">
-                                <li>✅ Acceso a todos los cursos</li>
-                                <li>✅ Certificados digitales</li>
-                                {plan.nombre.includes('Expert') && <li>✅ Mentoría personalizada</li>}
-                            </ul>
-                            <button className="btn-subscribe">Elegir Plan</button>
-                        </div>
-                    ))}
+                    {planes.map((plan) => {
+                        const hasDiscount = plan.ofertaActiva && plan.descuento > 0;
+                        const finalPrice = hasDiscount
+                            ? (plan.precio * (1 - plan.descuento / 100)).toFixed(2)
+                            : plan.precio;
+
+                        return (
+                            <div key={plan.idPlan} className={`pricing-card ${plan.nombre.includes('Expert') ? 'featured' : ''}`}>
+                                {hasDiscount && (
+                                    <div className="discount-badge">¡OFERTA {Math.floor(plan.descuento)}% OFF!</div>
+                                )}
+
+                                <h3>{plan.nombre}</h3>
+
+                                <div className="price-container">
+                                    {hasDiscount && <span className="original-price">${plan.precio}</span>}
+                                    <div className="price">${finalPrice}</div>
+                                </div>
+
+                                <p className="duration">cada {plan.duracionDias} días</p>
+
+                                <ul className="benefits">
+                                    {plan.beneficios && plan.beneficios.length > 0 ? (
+                                        plan.beneficios.map(b => (
+                                            <li key={b.idBeneficio}>✅ {b.descripcion}</li>
+                                        ))
+                                    ) : (
+                                        // Fallback si no hay beneficios en DB aún
+                                        <>
+                                            <li>✅ Acceso a contenido</li>
+                                            <li>✅ Soporte básico</li>
+                                        </>
+                                    )}
+                                </ul>
+                                <button className="btn-subscribe">Elegir Plan</button>
+                            </div>
+                        );
+                    })}
                 </div>
             </section>
 
