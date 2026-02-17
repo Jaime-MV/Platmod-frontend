@@ -675,20 +675,18 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    border-radius: 20px;
-    padding: 2px;
+    border-radius: 16px;
     background: linear-gradient(135deg, 
-        rgba(255, 168, 122, 0.5), 
-        transparent 30%, 
-        rgba(159, 232, 112, 0.3));
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
+        rgba(255, 138, 91, 0.3), 
+        transparent 50%);
     opacity: 0;
     transition: opacity 0.3s;
     pointer-events: none;
 }
 
+[data-theme='dark'] .pricing-card:hover::before {
+    opacity: 0.5;
+}
 /* Efecto de luz que sigue al cursor */
 [data-theme='dark'] .pricing-card::after {
     content: '';
