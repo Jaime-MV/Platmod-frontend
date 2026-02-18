@@ -12,7 +12,7 @@ const AdminDashboard = () => {
 
 
 
-  // --- ESTADOS PARA MODALES ---
+  // --- ESTADOS PARA MODALESA ---
   const [showDocenteModal, setShowDocenteModal] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false); // Modal eliminar
