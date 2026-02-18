@@ -1132,3 +1132,182 @@
 .card-success {
     border-left: 4px solid var(--accent-green);
 }
+
+/* ============================
+   USER PROFILE DROPDOWN
+   ============================ */
+.user-menu-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.user-avatar-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-orange);
+    background: linear-gradient(135deg, var(--primary-orange), var(--primary-dark));
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(255, 138, 91, 0.3);
+}
+
+.user-avatar-btn:hover {
+    transform: scale(1.08);
+    box-shadow: 0 4px 18px rgba(255, 138, 91, 0.45);
+}
+
+/* Dropdown card */
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + 12px);
+    right: 0;
+    width: 260px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    z-index: 2000;
+    overflow: hidden;
+    animation: dropdownSlideIn 0.25s ease-out;
+}
+
+@keyframes dropdownSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-8px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Header with avatar + info */
+.user-dropdown-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 18px;
+}
+
+.user-dropdown-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-orange), var(--primary-dark));
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.user-dropdown-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.user-dropdown-name {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.user-dropdown-email {
+    font-size: 0.8rem;
+    color: #8B98A8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Divider */
+.user-dropdown-divider {
+    height: 1px;
+    background: var(--card-border);
+    margin: 0;
+}
+
+/* Menu items */
+.user-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 12px 18px;
+    border: none;
+    background: none;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+    text-align: left;
+}
+
+.user-dropdown-item:hover {
+    background-color: rgba(255, 138, 91, 0.08);
+    color: var(--primary-orange);
+}
+
+.user-dropdown-logout {
+    color: #ef4444;
+}
+
+.user-dropdown-logout:hover {
+    background-color: rgba(239, 68, 68, 0.08);
+    color: #f87171;
+}
+
+/* ============================
+   DARK MODE — Profile Dropdown
+   ============================ */
+[data-theme='dark'] .user-avatar-btn {
+    background: linear-gradient(135deg, #FFA87A, #FF8A5B);
+    border-color: #FFA87A;
+    box-shadow: 0 2px 14px rgba(255, 168, 122, 0.4),
+        0 0 20px rgba(255, 168, 122, 0.15);
+}
+
+[data-theme='dark'] .user-avatar-btn:hover {
+    box-shadow: 0 4px 22px rgba(255, 168, 122, 0.55),
+        0 0 30px rgba(255, 168, 122, 0.25);
+}
+
+[data-theme='dark'] .user-dropdown {
+    background: rgba(21, 27, 38, 0.97);
+    border: 1px solid rgba(255, 168, 122, 0.2);
+    backdrop-filter: blur(20px) saturate(180%);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.6),
+        0 0 40px rgba(255, 168, 122, 0.08);
+}
+
+[data-theme='dark'] .user-dropdown-divider {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='dark'] .user-dropdown-item:hover {
+    background-color: rgba(255, 168, 122, 0.1);
+    color: #FFA87A;
+}
+
+[data-theme='dark'] .user-dropdown-logout:hover {
+    background-color: rgba(239, 68, 68, 0.1);
+    color: #f87171;
+}

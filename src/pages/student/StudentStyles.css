@@ -1,0 +1,394 @@
+/* ===========================================
+   StudentStyles.css — Premium Dark Dashboard
+   Matches homepage palette & design image
+   =========================================== */
+
+/* --- LAYOUT --- */
+.student-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* --- SIDEBAR --- */
+.student-sidebar {
+  width: 270px;
+  min-height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: row;
+}
+
+/* Green accent bar on the left edge */
+.sidebar-accent-bar {
+  width: 4px;
+  min-height: 100%;
+  background: linear-gradient(180deg, #7AB547 0%, #5fa030 50%, #7AB547 100%);
+  flex-shrink: 0;
+  box-shadow: 0 0 12px rgba(122, 181, 71, 0.4);
+}
+
+.sidebar-inner {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 20px 20px;
+  background: linear-gradient(180deg, #0D1117 0%, #111821 100%);
+  border-right: 1px solid rgba(255, 168, 122, 0.08);
+  backdrop-filter: blur(12px);
+  overflow-y: auto;
+}
+
+/* --- SIDEBAR LOGO --- */
+.sidebar-logo {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #FAFBFC;
+  margin-bottom: 48px;
+  padding-left: 12px;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-logo .dot {
+  color: var(--primary-orange, #FFA87A);
+}
+
+/* --- NAV MENU --- */
+.sidebar-nav {
+  flex: 1;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* --- MENU ITEMS --- */
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 13px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  color: #8B98A8;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  position: relative;
+}
+
+.sidebar-item svg {
+  flex-shrink: 0;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.sidebar-item:hover {
+  color: #CBD5E1;
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.sidebar-item:hover svg {
+  transform: scale(1.1);
+}
+
+/* Active state with orange accent */
+.sidebar-item.active {
+  color: var(--primary-orange, #FFA87A);
+  background-color: rgba(255, 138, 91, 0.1);
+}
+
+.sidebar-item.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: var(--primary-orange, #FFA87A);
+  border-radius: 0 4px 4px 0;
+  box-shadow: 0 0 8px rgba(255, 138, 91, 0.5);
+}
+
+.sidebar-item.active svg {
+  color: var(--primary-orange, #FFA87A);
+}
+
+/* --- SIDEBAR FOOTER --- */
+.sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 16px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebar-profile-btn {
+  font-size: 0.95rem;
+}
+
+.sidebar-logout-btn {
+  color: #ef4444 !important;
+  font-size: 0.95rem;
+}
+
+.sidebar-logout-btn:hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  color: #f87171 !important;
+}
+
+.sidebar-logout-btn svg {
+  color: #ef4444;
+}
+
+.sidebar-logout-btn:hover svg {
+  color: #f87171;
+}
+
+/* --- MAIN CONTENT --- */
+.student-content {
+  margin-left: 270px;
+  flex: 1;
+  padding: 40px 48px;
+  width: calc(100% - 270px);
+  min-height: 100vh;
+  background-color: var(--bg-color);
+}
+
+/* --- WELCOME HEADER --- */
+.welcome-header {
+  margin-bottom: 40px;
+}
+
+.welcome-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.welcome-header p {
+  color: #8B98A8;
+  font-size: 1.05rem;
+}
+
+/* --- COURSES SECTION --- */
+.courses-section-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--text-color);
+  position: relative;
+  display: inline-block;
+}
+
+.courses-section-title::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--primary-orange, #FFA87A);
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+.courses-grid-wrapper {
+  margin-top: 8px;
+}
+
+/* --- PROFILE SECTION --- */
+.profile-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 60px;
+}
+
+.profile-card {
+  background: linear-gradient(135deg, rgba(21, 27, 38, 0.8), rgba(31, 41, 55, 0.6));
+  border: 1px solid rgba(255, 168, 122, 0.15);
+  border-radius: 20px;
+  padding: 48px;
+  text-align: center;
+  min-width: 360px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.profile-avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary-orange, #FFA87A), #FF8A5B);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  color: white;
+  box-shadow: 0 4px 20px rgba(255, 138, 91, 0.3);
+}
+
+.profile-card h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.profile-email {
+  color: #8B98A8;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
+}
+
+.profile-role-badge {
+  display: inline-block;
+  padding: 6px 18px;
+  background: rgba(122, 181, 71, 0.15);
+  color: #7AB547;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* --- PLACEHOLDER SECTIONS --- */
+.placeholder-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  color: #8B98A8;
+}
+
+.placeholder-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+}
+
+.placeholder-section h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+  color: var(--text-color);
+}
+
+.placeholder-section p {
+  color: #64748b;
+}
+
+/* ============================
+   LIGHT MODE OVERRIDES
+   ============================ */
+[data-theme='light'] .sidebar-inner {
+  background: linear-gradient(180deg, #1a2233 0%, #1f2a3d 100%);
+}
+
+[data-theme='light'] .sidebar-logo {
+  color: #FAFBFC;
+}
+
+[data-theme='light'] .sidebar-item {
+  color: #8B98A8;
+}
+
+[data-theme='light'] .sidebar-item:hover {
+  color: #CBD5E1;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme='light'] .sidebar-item.active {
+  color: var(--primary-orange);
+  background-color: rgba(255, 138, 91, 0.12);
+}
+
+[data-theme='light'] .profile-card {
+  background: var(--card-bg);
+  border-color: var(--card-border);
+  box-shadow: var(--shadow);
+}
+
+/* ============================
+   DARK MODE ENHANCEMENTS
+   ============================ */
+[data-theme='dark'] .student-content {
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(255, 168, 122, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(159, 232, 112, 0.015) 0%, transparent 50%);
+  background-attachment: fixed;
+}
+
+[data-theme='dark'] .welcome-header h1 {
+  text-shadow: 0 0 30px rgba(255, 168, 122, 0.1);
+}
+
+[data-theme='dark'] .courses-section-title::after {
+  box-shadow: 0 0 10px rgba(255, 168, 122, 0.4);
+}
+
+[data-theme='dark'] .sidebar-accent-bar {
+  box-shadow: 0 0 18px rgba(122, 181, 71, 0.5), 0 0 40px rgba(122, 181, 71, 0.2);
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+@media (max-width: 768px) {
+  .student-sidebar {
+    width: 220px;
+  }
+
+  .student-content {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+    padding: 24px 20px;
+  }
+
+  .welcome-header h1 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .student-sidebar {
+    width: 60px;
+  }
+
+  .sidebar-inner {
+    padding: 20px 8px;
+    align-items: center;
+  }
+
+  .sidebar-logo,
+  .sidebar-item span {
+    display: none;
+  }
+
+  .sidebar-item {
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .student-content {
+    margin-left: 60px;
+    width: calc(100% - 60px);
+    padding: 20px 16px;
+  }
+}
