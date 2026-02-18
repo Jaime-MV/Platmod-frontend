@@ -46,7 +46,7 @@ const HomePage = () => {
                 <div className="nav-links">
                     <a href="#cursos">Cursos</a>
                     <a href="#planes">Precios</a>
-                    <button className="home-theme-toggle" onClick={toggleTheme} title="Cambiar tema">
+                    <button className="theme-toggle-btn" onClick={toggleTheme} title="Cambiar tema">
                         {theme === 'light' ? '🌙' : '☀️'}
                     </button>
                     <button className="btn-login" onClick={() => window.location.href = '/login'}>
