@@ -4,20 +4,16 @@ import './AdminStyles.css';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AdminPlanes from './AdminPlanes';
 
+import { useTheme } from '../../context/ThemeContext';
+
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('cursos');
   const [cursos, setCursos] = useState([]);
   const [loading, setLoading] = useState(true);
 
   // --- TEMA ---
-  const [theme, setTheme] = useState(() => localStorage.getItem('admin-theme') || 'light');
-
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('admin-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => setTheme(t => t === 'light' ? 'dark' : 'light');
+  // Usamos el contexto global para que el tema sea consistente en toda la app
+  const { theme, toggleTheme } = useTheme();
 
   // --- MODALES ---
   const [showDocenteModal, setShowDocenteModal] = useState(false);

@@ -15,7 +15,8 @@ const AuthPage = () => {
   const [formData, setFormData] = useState({
     nombre: '',
     correo: '',
-    contrasena: ''
+    contrasena: '',
+    rol: 'ESTUDIANTE'
   });
 
   const [message, setMessage] = useState({ text: '', type: '' });
@@ -30,7 +31,7 @@ const AuthPage = () => {
   const toggleView = () => {
     setIsLoginView(!isLoginView);
     setMessage({ text: '', type: '' });
-    setFormData({ nombre: '', correo: '', contrasena: '' });
+    setFormData({ nombre: '', correo: '', contrasena: '', rol: 'ESTUDIANTE' });
   };
 
   // --- LÓGICA DE LOGIN Y REGISTRO ---
@@ -38,11 +39,23 @@ const AuthPage = () => {
     e.preventDefault();
     setMessage({ text: 'Procesando...', type: '' });
 
+    // Validacion de contraseñas iguales en registro
+    if (!isLoginView && formData.contrasena !== formData.confirmarContrasena) {
+      setMessage({ text: 'Las contraseñas no coinciden.', type: 'error' });
+      return;
+    }
+
     const endpoint = isLoginView ? `${API_URL}/auth/login` : `${API_URL}/usuarios`;
 
+    // Normalizar correo: minúsculas y sin espacios
+    const normalizedEmail = formData.correo.trim().toLowerCase();
+
     const bodyPayload = isLoginView
-      ? { correo: formData.correo, contrasena: formData.contrasena }
-      : formData;
+      ? { correo: normalizedEmail, contrasena: formData.contrasena }
+      : { ...formData, correo: normalizedEmail };
+
+    // Eliminar campo auxiliar antes de enviar
+    if (!isLoginView) delete bodyPayload.confirmarContrasena;
 
     try {
       const response = await fetch(endpoint, {
@@ -78,8 +91,8 @@ const AuthPage = () => {
               console.log("Redirigiendo a Dashboard Admin...");
               navigate('/admin'); // <--- Llevamos al Admin a su panel
             } else {
-              console.log("Redirigiendo a Home...");
-              navigate('/'); // <--- Llevamos a estudiantes/docentes al Home
+              console.log("Redirigiendo a Dashboard Estudiante...");
+              navigate('/dashboard'); // <--- Llevamos a estudiantes/docentes al Dashboard
             }
           }, 1000); // Pequeño delay para que lean "Bienvenido"
 
@@ -159,6 +172,21 @@ const AuthPage = () => {
               required
             />
           </div>
+
+          {!isLoginView && (
+            <div className="input-group">
+              <label className="input-label" htmlFor="confirmarContrasena">Confirmar Contraseña</label>
+              <input
+                type="password"
+                name="confirmarContrasena"
+                className="auth-input"
+                placeholder="******"
+                value={formData.confirmarContrasena || ''}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          )}
 
           <button type="submit" className="btn-gold">
             {isLoginView ? 'Ingresar' : 'Registrarme'}

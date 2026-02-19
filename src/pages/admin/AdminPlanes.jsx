@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getPlanes, updatePlan, addBeneficio, deleteBeneficio } from '../../services/api';
+import { getPlanes, updatePlan, addBeneficio, deleteBeneficio, createPlan } from '../../services/api';
 import './AdminStyles.css';
 
 const AdminPlanes = () => {
@@ -22,16 +22,39 @@ const AdminPlanes = () => {
         setNewBenefit('');
     };
 
+    const handleCreateClick = () => {
+        setEditingPlan({
+            nombre: '',
+            precio: '',
+            duracionDias: 30,
+            descuento: 0,
+            ofertaActiva: false,
+            beneficios: [] // Inicialmente vacío
+        });
+        setNewBenefit('');
+    };
+
     const handleClose = () => setEditingPlan(null);
 
     const handleSave = async () => {
         try {
-            await updatePlan(editingPlan.idPlan, editingPlan);
-            alert('Plan actualizado correctamente');
-            handleClose();
-            loadPlanes();
+            if (editingPlan.idPlan) {
+                // Actualizar existente
+                await updatePlan(editingPlan.idPlan, editingPlan);
+                alert('Plan actualizado correctamente');
+                handleClose();
+                loadPlanes();
+            } else {
+                // Crear nuevo
+                const newPlan = await createPlan(editingPlan);
+                alert('Plan creado correctamente. Ahora puedes agregar beneficios.');
+                // Recargar para tener la lista actualizada
+                await loadPlanes();
+                // Actualizar el modo de edición con el plan creado (que ya tiene ID)
+                setEditingPlan(newPlan);
+            }
         } catch {
-            alert('Error al actualizar plan');
+            alert('Error al guardar plan');
         }
     };
 
@@ -82,6 +105,7 @@ const AdminPlanes = () => {
         <div>
             <div className="section-header">
                 <h1>Planes de Suscripción</h1>
+                <button className="btn-primary" onClick={handleCreateClick}>+ Crear Nuevo Plan</button>
             </div>
 
             <div className="admin-table-container">
@@ -127,7 +151,7 @@ const AdminPlanes = () => {
             <div style={overlayStyle}>
                 <div className="modal-content modal-lg">
                     <div className="modal-header">
-                        <h3>Editar Plan: {editingPlan?.nombre}</h3>
+                        <h3>{editingPlan?.idPlan ? `Editar Plan: ${editingPlan.nombre}` : 'Crear Nuevo Plan'}</h3>
                         <button className="close-btn" onClick={handleClose}>×</button>
                     </div>
 
@@ -161,24 +185,32 @@ const AdminPlanes = () => {
 
                             <div className="benefits-section">
                                 <h4>Beneficios</h4>
-                                <ul>
-                                    {editingPlan.beneficios && editingPlan.beneficios.map(b => (
-                                        <li key={b.idBeneficio}>
-                                            <span>{b.descripcion}</span>
-                                            <button className="btn-delete-sm" onClick={() => handleDeleteBenefit(b.idBeneficio)}>✕</button>
-                                        </li>
-                                    ))}
-                                </ul>
-                                <div className="add-benefit">
-                                    <input
-                                        type="text"
-                                        placeholder="Nuevo beneficio..."
-                                        value={newBenefit}
-                                        onChange={e => setNewBenefit(e.target.value)}
-                                        onKeyDown={e => e.key === 'Enter' && handleAddBenefit()}
-                                    />
-                                    <button className="btn-primary-sm" onClick={handleAddBenefit}>+ Agregar</button>
-                                </div>
+                                {editingPlan.idPlan ? (
+                                    <>
+                                        <ul>
+                                            {editingPlan.beneficios && editingPlan.beneficios.map(b => (
+                                                <li key={b.idBeneficio}>
+                                                    <span>{b.descripcion}</span>
+                                                    <button className="btn-delete-sm" onClick={() => handleDeleteBenefit(b.idBeneficio)}>✕</button>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                        <div className="add-benefit">
+                                            <input
+                                                type="text"
+                                                placeholder="Nuevo beneficio..."
+                                                value={newBenefit}
+                                                onChange={e => setNewBenefit(e.target.value)}
+                                                onKeyDown={e => e.key === 'Enter' && handleAddBenefit()}
+                                            />
+                                            <button className="btn-primary-sm" onClick={handleAddBenefit}>+ Agregar</button>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <p style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                                        Guarda el plan primero para agregar beneficios.
+                                    </p>
+                                )}
                             </div>
 
                             <div className="modal-actions">

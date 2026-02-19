@@ -97,6 +97,16 @@ export const updateCurso = async (id, cursoData) => {
     return await response.json();
 };
 
+export const createPlan = async (planData) => {
+    const response = await fetch(`${API_URL}/admin/planes`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(planData)
+    });
+    if (!response.ok) throw new Error('Error al crear plan');
+    return await response.json();
+};
+
 export const updatePlan = async (id, planData) => {
     const response = await fetch(`${API_URL}/admin/planes/${id}`, {
         method: 'PUT',

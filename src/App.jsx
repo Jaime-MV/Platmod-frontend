@@ -10,6 +10,7 @@ import { useAuth } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import AuthPage from './pages/AuthPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import StudentDashboard from './pages/student/StudentDashboard';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -26,6 +27,11 @@ function App() {
         {/* Si isAdmin es true, deja pasar. Si no, manda al Home (/) */}
         <Route element={<ProtectedRoute isAllowed={isAdmin} redirectTo="/" />}>
           <Route path="/admin/*" element={<AdminDashboard />} />
+        </Route>
+
+        {/* RUTA PROTEGIDA DE ESTUDIANTE (Cualquier usuario logueado) */}
+        <Route element={<ProtectedRoute isAllowed={!!user} redirectTo="/login" />}>
+          <Route path="/dashboard" element={<StudentDashboard />} />
         </Route>
 
       </Routes>
