@@ -174,7 +174,12 @@ const HomePage = () => {
                                         </>
                                     )}
                                 </ul>
-                                <button className="btn-subscribe">Elegir Plan</button>
+                                <button 
+                                    className="btn-subscribe"
+                                    onClick={() => navigate(`/planes/${plan.idPlan}`)}
+                                >
+                                    Elegir Plan
+                                </button>
                             </div>
                         );
                     })}

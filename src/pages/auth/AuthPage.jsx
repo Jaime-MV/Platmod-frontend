@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '../context/ThemeContext';
-import '../components/auth/AuthStyles.css';
-import { API_URL } from '../config';
+import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
+import './AuthStyles.css';
+import { API_URL } from '../../config';
 
 const AuthPage = () => {
   const { login } = useAuth();
