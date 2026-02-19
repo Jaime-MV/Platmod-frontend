@@ -1,3 +1,7 @@
+/* ===========================================
+   CourseGrid.css — Consistent with homepage
+   =========================================== */
+
 /* Contenedor principal */
 .course-grid-section {
     padding: 40px 20px;
@@ -35,7 +39,6 @@
     align-items: center;
     gap: 20px;
     position: relative;
-    /* Para el overlay del link */
     transition: all 0.3s ease;
     cursor: pointer;
     box-shadow: var(--shadow);
@@ -46,6 +49,32 @@
     transform: translateY(-5px);
     border-color: var(--primary-orange);
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode course cards */
+[data-theme='dark'] .course-card-compact {
+    background: linear-gradient(135deg,
+            rgba(21, 27, 38, 0.8) 0%,
+            rgba(31, 41, 55, 0.6) 100%);
+    border: 1px solid rgba(255, 168, 122, 0.1);
+    box-shadow:
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 168, 122, 0.05) inset;
+    backdrop-filter: blur(12px);
+}
+
+[data-theme='dark'] .course-card-compact:hover {
+    border-color: rgba(255, 168, 122, 0.4);
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(255, 168, 122, 0.1);
+    transform: translateY(-6px);
+}
+
+/* Light mode course cards */
+[data-theme='light'] .course-card-compact:hover {
+    box-shadow: 0 12px 30px rgba(255, 138, 91, 0.15);
+    background-color: #FFFAF7;
 }
 
 /* ICONO */
@@ -59,6 +88,21 @@
     justify-content: center;
     align-items: center;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+[data-theme='dark'] .course-icon-wrapper {
+    background: rgba(255, 168, 122, 0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.course-card-compact:hover .course-icon-wrapper {
+    transform: scale(1.05);
+}
+
+[data-theme='dark'] .course-card-compact:hover .course-icon-wrapper {
+    background: rgba(255, 168, 122, 0.12);
+    box-shadow: 0 4px 12px rgba(255, 138, 91, 0.15);
 }
 
 .course-icon-img {
@@ -95,6 +139,10 @@
     letter-spacing: 0.5px;
 }
 
+[data-theme='dark'] .course-meta {
+    color: #FFA87A;
+}
+
 .meta-arrow {
     transition: transform 0.3s;
     font-size: 1.2rem;
@@ -102,6 +150,10 @@
 
 .course-card-compact:hover .meta-arrow {
     transform: translateX(5px);
+}
+
+[data-theme='dark'] .course-card-compact:hover .meta-arrow {
+    text-shadow: 0 0 8px rgba(255, 168, 122, 0.5);
 }
 
 /* LINK INVISIBLE */

@@ -1,8 +1,13 @@
 import React from 'react';
-import './CourseGrid.css'; // Asegúrate de que tu CSS esté en este archivo
+import './CourseGrid.css';
 
-const CourseGrid = ({ courses }) => {
-  // 1. Manejo de estado vacío
+// Hoisted fallback handler outside component (rendering-hoist-jsx)
+const handleImgError = (e) => {
+  e.target.src = 'https://via.placeholder.com/50?text=C';
+};
+
+const CourseGrid = React.memo(({ courses }) => {
+  // 1. Manejo de estado vacío — check length first (js-length-check-first)
   if (!courses || courses.length === 0) {
     return (
       <section className="course-grid-section">
@@ -27,7 +32,7 @@ const CourseGrid = ({ courses }) => {
                 src={curso.portadaUrl || "https://via.placeholder.com/50"}
                 alt={curso.titulo}
                 className="course-icon-img"
-                onError={(e) => e.target.src = 'https://via.placeholder.com/50?text=C'} // Fallback si la imagen falla
+                onError={handleImgError}
               />
             </div>
 
@@ -36,19 +41,19 @@ const CourseGrid = ({ courses }) => {
               <h3 className="course-title-compact">{curso.titulo}</h3>
               <div className="course-meta">
                 <span>Ver contenido</span>
-                {/* Flecha simple usando caracteres o SVG */}
                 <span className="meta-arrow">→</span>
               </div>
             </div>
 
-            {/* LINK FANTASMA (Para hacer click en toda la tarjeta) */}
-            {/* Aquí podrías usar <Link to={`/curso/${curso.idCurso}`} ... /> si usas React Router */}
+            {/* LINK FANTASMA */}
             <a href={`#curso-${curso.idCurso}`} className="card-link-overlay" aria-label={`Ver curso ${curso.titulo}`}></a>
           </div>
         ))}
       </div>
     </section>
   );
-};
+});
+
+CourseGrid.displayName = 'CourseGrid';
 
 export default CourseGrid;

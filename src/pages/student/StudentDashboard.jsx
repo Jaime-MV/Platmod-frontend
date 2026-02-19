@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import CourseGrid from '../../components/CourseGrid';
 import { getCursos } from '../../services/api';
@@ -11,12 +12,58 @@ import {
     Award,
     Bell,
     User,
-    LogOut
+    LogOut,
+    Sun,
+    Moon
 } from 'lucide-react';
 import './StudentStyles.css';
 
+// Hoisted outside component — static data, no re-creation per render (rendering-hoist-jsx)
+const MENU_ITEMS = [
+    { id: 'inicio', label: 'Inicio', icon: Home },
+    { id: 'comentarios', label: 'Comentarios', icon: MessageSquare },
+    { id: 'rutas', label: 'Mis Rutas', icon: Map },
+    { id: 'progreso', label: 'Mi progreso', icon: TrendingUp },
+    { id: 'certificados', label: 'Mis certificados', icon: Award },
+    { id: 'notificaciones', label: 'Notificaciones', icon: Bell },
+];
+
+const PLACEHOLDER_DATA = {
+    comentarios: {
+        icon: '💬',
+        title: 'Tus Comentarios',
+        description: 'Aquí podrás ver y gestionar tus comentarios en los cursos.',
+        features: ['Historial de comentarios', 'Respuestas recibidas', 'Discusiones activas']
+    },
+    rutas: {
+        icon: '🗺️',
+        title: 'Mis Rutas de Aprendizaje',
+        description: 'Rutas personalizadas para guiar tu proceso de aprendizaje.',
+        features: ['Rutas sugeridas', 'Progreso por ruta', 'Objetivos de aprendizaje']
+    },
+    progreso: {
+        icon: '📊',
+        title: 'Mi Progreso',
+        description: 'Métricas detalladas de tu avance en los cursos.',
+        features: ['Horas de estudio', 'Cursos completados', 'Racha de aprendizaje']
+    },
+    certificados: {
+        icon: '🏆',
+        title: 'Mis Certificados',
+        description: 'Certificados obtenidos al completar los cursos.',
+        features: ['Descargar certificados', 'Compartir en LinkedIn', 'Verificación digital']
+    },
+    notificaciones: {
+        icon: '🔔',
+        title: 'Notificaciones',
+        description: 'Mantente al día con las novedades de tus cursos.',
+        features: ['Nuevas lecciones', 'Actualizaciones de cursos', 'Mensajes del instructor']
+    }
+};
+
 const StudentDashboard = () => {
     const { user, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const [cursos, setCursos] = useState([]);
     const [activeTab, setActiveTab] = useState('inicio');
@@ -31,14 +78,6 @@ const StudentDashboard = () => {
         fetchCursos();
     }, []);
 
-    const menuItems = [
-        { id: 'inicio', label: 'Inicio', icon: Home },
-        { id: 'comentarios', label: 'Comentarios', icon: MessageSquare },
-        { id: 'rutas', label: 'Mis Rutas', icon: Map },
-        { id: 'progreso', label: 'Mi progreso', icon: TrendingUp },
-        { id: 'certificados', label: 'Mis certificados', icon: Award },
-        { id: 'notificaciones', label: 'Notificaciones', icon: Bell },
-    ];
 
     const handleLogout = () => {
         logout();
@@ -73,14 +112,30 @@ const StudentDashboard = () => {
                         </div>
                     </div>
                 );
-            default:
+            default: {
+                const data = PLACEHOLDER_DATA[activeTab];
+                if (!data) return null;
                 return (
                     <div className="placeholder-section">
-                        <div className="placeholder-icon">🚧</div>
-                        <h2>Sección en construcción</h2>
-                        <p>Pronto podrás ver tus {activeTab} aquí.</p>
+                        <div className="placeholder-card">
+                            <div className="placeholder-icon-wrapper">
+                                <span className="placeholder-icon">{data.icon}</span>
+                            </div>
+                            <h2>{data.title}</h2>
+                            <p className="placeholder-desc">{data.description}</p>
+                            <div className="placeholder-features">
+                                {data.features.map((feature, i) => (
+                                    <div key={i} className="placeholder-feature-item">
+                                        <span className="feature-check">✓</span>
+                                        <span>{feature}</span>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="placeholder-badge">Próximamente</div>
+                        </div>
                     </div>
                 );
+            }
         }
     };
 
@@ -100,7 +155,7 @@ const StudentDashboard = () => {
                     {/* Navigation menu */}
                     <nav className="sidebar-nav">
                         <ul className="sidebar-menu">
-                            {menuItems.map(item => {
+                            {MENU_ITEMS.map(item => {
                                 const IconComponent = item.icon;
                                 return (
                                     <li
@@ -116,8 +171,16 @@ const StudentDashboard = () => {
                         </ul>
                     </nav>
 
-                    {/* Footer: Perfil + Logout */}
+                    {/* Footer: Theme Toggle + Perfil + Logout */}
                     <div className="sidebar-footer">
+                        <button
+                            className="sidebar-item sidebar-theme-btn"
+                            onClick={toggleTheme}
+                            title="Cambiar tema"
+                        >
+                            {theme === 'light' ? <Moon size={20} strokeWidth={1.8} /> : <Sun size={20} strokeWidth={1.8} />}
+                            <span>{theme === 'light' ? 'Modo Oscuro' : 'Modo Claro'}</span>
+                        </button>
                         <button
                             className={`sidebar-item sidebar-profile-btn ${activeTab === 'perfil' ? 'active' : ''}`}
                             onClick={() => setActiveTab('perfil')}
