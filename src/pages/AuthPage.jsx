@@ -1,12 +1,14 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // <--- 1. IMPORTAR ESTO
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import '../components/auth/AuthStyles.css';
 import { API_URL } from '../config';
 
 const AuthPage = () => {
   const { login } = useAuth();
-  const navigate = useNavigate(); // <--- 2. INICIALIZAR EL HOOK
+  const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   // Estados de vista
   const [isLoginView, setIsLoginView] = useState(true);
@@ -22,10 +24,11 @@ const AuthPage = () => {
   const [message, setMessage] = useState({ text: '', type: '' });
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   const toggleView = () => {
@@ -89,12 +92,12 @@ const AuthPage = () => {
           setTimeout(() => {
             if (data.rol === 'ADMINISTRADOR') {
               console.log("Redirigiendo a Dashboard Admin...");
-              navigate('/admin'); // <--- Llevamos al Admin a su panel
+              navigate('/admin');
             } else {
               console.log("Redirigiendo a Dashboard Estudiante...");
-              navigate('/dashboard'); // <--- Llevamos a estudiantes/docentes al Dashboard
+              navigate('/dashboard');
             }
-          }, 1000); // Pequeño delay para que lean "Bienvenido"
+          }, 1000);
 
         } else {
           setMessage({ text: '¡Cuenta creada! Inicia sesión.', type: 'success' });
@@ -117,22 +120,31 @@ const AuthPage = () => {
     }
   };
 
-  // --- RENDERIZADO (Sin cambios mayores, solo quité variables no usadas) ---
   return (
     <div className="auth-container">
+      {/* Theme toggle button */}
+      <button className="auth-theme-toggle" onClick={toggleTheme} title="Cambiar tema">
+        {theme === 'light' ? '🌙' : '☀️'}
+      </button>
+
+      {/* Back to home */}
+      <button className="auth-back-link" onClick={() => navigate('/')}>
+        ← Inicio
+      </button>
+
       <div className="auth-card">
         <h2 className="auth-title">
           {isLoginView ? 'Iniciar Sesión' : 'Crear Cuenta'}
         </h2>
 
-        {message.text && (
+        {message.text ? (
           <div className={`message ${message.type}`}>
             {message.text}
           </div>
-        )}
+        ) : null}
 
         <form className="auth-form" onSubmit={handleSubmit}>
-          {!isLoginView && (
+          {!isLoginView ? (
             <div className="input-group">
               <label className="input-label" htmlFor="nombre">Nombre Completo</label>
               <input
@@ -145,7 +157,7 @@ const AuthPage = () => {
                 required={!isLoginView}
               />
             </div>
-          )}
+          ) : null}
 
           <div className="input-group">
             <label className="input-label" htmlFor="correo">Correo Electrónico</label>
@@ -173,7 +185,7 @@ const AuthPage = () => {
             />
           </div>
 
-          {!isLoginView && (
+          {!isLoginView ? (
             <div className="input-group">
               <label className="input-label" htmlFor="confirmarContrasena">Confirmar Contraseña</label>
               <input
@@ -186,7 +198,7 @@ const AuthPage = () => {
                 required
               />
             </div>
-          )}
+          ) : null}
 
           <button type="submit" className="btn-gold">
             {isLoginView ? 'Ingresar' : 'Registrarme'}
