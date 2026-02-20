@@ -12,7 +12,7 @@ const HomePage = () => {
     const [planes, setPlanes] = useState([]);
     const [loading, setLoading] = useState(true);
     const { theme, toggleTheme } = useTheme();
-    const { user, isAuthenticated, logout } = useAuth();
+    const { user, isAuthenticated, isDocente, isAdmin, logout } = useAuth();
     const navigate = useNavigate();
 
     // Dropdown state
@@ -57,7 +57,13 @@ const HomePage = () => {
 
     const handleEditProfile = () => {
         setDropdownOpen(false);
-        navigate('/dashboard');
+        if (isAdmin) {
+            navigate('/admin');
+        } else if (isDocente) {
+            navigate('/docente');
+        } else {
+            navigate('/dashboard');
+        }
     };
 
     const handleLogout = () => {
@@ -123,7 +129,13 @@ const HomePage = () => {
                     className="btn-cta"
                     onClick={() => {
                         if (isAuthenticated) {
-                            navigate('/dashboard');
+                            if (isAdmin) {
+                                navigate('/admin');
+                            } else if (isDocente) {
+                                navigate('/docente');
+                            } else {
+                                navigate('/dashboard');
+                            }
                         } else {
                             document.getElementById('planes')?.scrollIntoView({ behavior: 'smooth' });
                         }

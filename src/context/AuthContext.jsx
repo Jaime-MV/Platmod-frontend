@@ -88,13 +88,15 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
     };
 
+    const rolUpper = user?.rol?.toString().toUpperCase();
+
     const value = {
         user,
         login,
         logout,
         isAuthenticated: !!user,
-        isAdmin: user?.rol === 'ADMINISTRADOR',
-        isDocente: user?.rol === 'DOCENTE',
+        isAdmin: rolUpper === 'ADMINISTRADOR',
+        isDocente: rolUpper === 'DOCENTE',
         loading
     };
 
