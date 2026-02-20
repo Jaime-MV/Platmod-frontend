@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { getCursos, updateCurso, updateDocentesAsignacion, getDocentesParaAsignacion, createCurso, deleteCurso } from '../../services/api';
+import { getCursos, updateCurso, updateDocentesAsignacion, getDocentesParaAsignacion, createCurso, deleteCurso, eliminarPlan, crearDocente, editarDocente, eliminarDocente } from '../../services/api';
 import './AdminStyles.css';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import AdminPlanes from './AdminPlanes';
+import AdminDocentes from './AdminDocentes';
 
 import { useTheme } from '../../context/ThemeContext';
 
@@ -161,6 +162,7 @@ const AdminDashboard = () => {
       <aside className="sidebar">
         <h2>PlatMod Admin</h2>
 
+
         <button
           className={`sidebar-btn ${activeTab === 'cursos' ? 'active' : ''}`}
           onClick={() => setActiveTab('cursos')}
@@ -173,6 +175,13 @@ const AdminDashboard = () => {
           onClick={() => setActiveTab('planes')}
         >
           💳 Planes y Precios
+        </button>
+
+        <button
+          className={`sidebar-btn ${activeTab === 'docentes' ? 'active' : ''}`}
+          onClick={() => setActiveTab('docentes')}
+        >
+          👨‍🏫 Gestión de Docentes
         </button>
 
         <button className="theme-toggle" onClick={toggleTheme}>
@@ -234,7 +243,12 @@ const AdminDashboard = () => {
           </div>
         )}
 
+
         {activeTab === 'planes' && <AdminPlanes />}
+
+        {activeTab === 'docentes' && (
+          <AdminDocentes />
+        )}
 
       </main>
 

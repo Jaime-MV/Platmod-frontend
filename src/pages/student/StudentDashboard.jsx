@@ -81,7 +81,6 @@ const StudentDashboard = () => {
         fetchCursos();
     }, []);
 
-
     const handleLogout = () => {
         logout();
         navigate('/login');
@@ -89,8 +88,6 @@ const StudentDashboard = () => {
 
     const renderContent = () => {
         switch (activeTab) {
-            case 'foro':
-                return <ForoPage />;
             case 'inicio':
                 return (
                     <div>
