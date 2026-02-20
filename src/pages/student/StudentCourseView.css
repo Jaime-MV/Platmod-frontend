@@ -1,0 +1,424 @@
+.sc-view-container {
+    padding: 24px;
+    animation: fadeIn 0.3s ease;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sc-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 32px;
+}
+
+.sc-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    align-self: flex-start;
+}
+
+.sc-back-btn:hover {
+    background-color: var(--bg-hover);
+    color: var(--text-primary);
+}
+
+.sc-course-info {
+    display: flex;
+    gap: 24px;
+    background: var(--bg-secondary);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.sc-course-cover {
+    width: 200px;
+    height: 140px;
+    border-radius: 12px;
+    object-fit: cover;
+    box-shadow: var(--shadow-sm);
+}
+
+.sc-course-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sc-course-details h1 {
+    margin: 0 0 12px 0;
+    font-size: 28px;
+    color: var(--text-primary);
+}
+
+.sc-course-description {
+    color: var(--text-secondary);
+    font-size: 16px;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Lecciones Section */
+.sc-lecciones-section {
+    margin-top: 32px;
+}
+
+.sc-lecciones-section h2 {
+    font-size: 20px;
+    color: var(--text-primary);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.sc-lecciones-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.sc-leccion-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 20px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sc-leccion-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent-primary);
+    box-shadow: var(--shadow-md);
+}
+
+.sc-leccion-info {
+    flex: 1;
+}
+
+.sc-leccion-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+
+.sc-leccion-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+}
+
+.sc-leccion-meta {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.sc-docente-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-hover);
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.sc-docente-badge .lucide {
+    color: var(--accent-primary);
+}
+
+.sc-leccion-action {
+    color: var(--accent-primary);
+    background: var(--bg-hover);
+    padding: 8px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.sc-leccion-card:hover .sc-leccion-action {
+    background: var(--accent-primary);
+    color: white;
+}
+
+/* Empty State */
+.sc-empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    border: 1px dashed var(--border-color);
+    color: var(--text-secondary);
+}
+
+.sc-empty-state-icon {
+    margin-bottom: 16px;
+    color: var(--text-muted);
+    opacity: 0.5;
+}
+
+.sc-empty-state h3 {
+    color: var(--text-primary);
+    font-size: 18px;
+    margin: 0 0 8px 0;
+}
+
+.sc-empty-state p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Modulos Viewer Section */
+.sc-modulos-viewer {
+    animation: fadeIn 0.3s ease;
+}
+
+.sc-modulos-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.sc-modulos-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: var(--text-primary);
+}
+
+.sc-modulos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.sc-modulo-card {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    flex-direction: column;
+}
+
+.sc-modulo-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--accent-primary);
+    transform: translateY(-4px);
+}
+
+.sc-modulo-cover-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    /* 16:9 Aspect Ratio */
+    background: #000;
+}
+
+.sc-modulo-cover,
+.sc-modulo-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.sc-modulo-content {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.sc-modulo-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0 0 12px 0;
+}
+
+.sc-modulo-desc {
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin: 0 0 20px 0;
+    flex: 1;
+}
+
+.sc-recursos-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+}
+
+.sc-recurso-titulo {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.sc-recurso-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--bg-primary);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+}
+
+.sc-recurso-item:hover {
+    background: var(--bg-hover);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.sc-recurso-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: rgba(33, 150, 243, 0.1);
+    color: #2196f3;
+}
+
+.sc-recurso-item:hover .sc-recurso-icon {
+    background: #2196f3;
+    color: white;
+}
+
+.sc-recurso-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+    min-width: 0;
+}
+
+.sc-recurso-name {
+    font-size: 14px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sc-recurso-type {
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+
+.sc-recurso-action {
+    color: var(--text-secondary);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.sc-recurso-item:hover .sc-recurso-action {
+    opacity: 1;
+    color: var(--accent-primary);
+}
+
+/* Loading States */
+.sc-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 64px 0;
+    color: var(--text-secondary);
+    gap: 16px;
+}
+
+.sc-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top-color: var(--accent-primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 768px) {
+    .sc-course-info {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .sc-course-cover {
+        width: 100%;
+        max-width: 300px;
+        height: 200px;
+    }
+
+    .sc-leccion-card {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+    }
+
+    .sc-leccion-action {
+        align-self: flex-end;
+    }
+
+    .sc-modulos-grid {
+        grid-template-columns: 1fr;
+    }
+}

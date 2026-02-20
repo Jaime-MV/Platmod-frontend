@@ -1,0 +1,44 @@
+/* ============================================
+   CSS Design Tokens — PlatMod Global Variables
+   Used by all pages (Home, Auth, Dashboard, Admin)
+   ============================================ */
+
+:root {
+    /* Paleta Suavizada: Naranja Coral + Verde Suave + Neutros Cálidos */
+    --primary-orange: #FF8A5B;
+    --primary-dark: #D97757;
+    --accent-yellow: #FFB74D;
+    --accent-gold: #F4D078;
+    --accent-green: #7AB547;
+
+    /* Light Mode */
+    --bg-color: #E5EBF0;
+    --text-color: #2D3748;
+    --card-bg: #FFFFFF;
+    --card-border: #C8D4E0;
+    --navbar-bg: rgba(229, 235, 240, 0.98);
+    --hero-gradient: linear-gradient(135deg, #FFE9DD 0%, #E5EBF0 100%);
+    --shadow: 0 4px 12px rgba(255, 138, 91, 0.15);
+}
+
+[data-theme='dark'] {
+    /* Dark Mode - Ultra Premium */
+    --bg-color: #0A0E14;
+    --text-color: #FAFBFC;
+    --card-bg: #151B26;
+    --card-border: #1F2937;
+    --navbar-bg: rgba(21, 27, 38, 0.98);
+    --hero-gradient: linear-gradient(135deg,
+            rgba(255, 158, 122, 0.15) 0%,
+            rgba(255, 138, 91, 0.08) 20%,
+            #0A0E14 50%,
+            rgba(26, 35, 50, 0.3) 100%);
+    --shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+
+    /* Acentos premium ultra vibrantes */
+    --primary-orange: #FFA87A;
+    --primary-dark: #FF8A5B;
+    --accent-green: #9FE870;
+    --accent-yellow: #FFC966;
+    --accent-blue: #6AB7FF;
+}

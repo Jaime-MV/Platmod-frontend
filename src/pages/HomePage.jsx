@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCursos, getPlanes } from '../services/api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../components/auth/AuthContext';
 import TeachersSection from '../components/TeachersSection';
 import CourseGrid from '../components/CourseGrid';
 import { useTheme } from '../context/ThemeContext';
@@ -12,7 +12,7 @@ const HomePage = () => {
     const [planes, setPlanes] = useState([]);
     const [loading, setLoading] = useState(true);
     const { theme, toggleTheme } = useTheme();
-    const { user, isAuthenticated, isDocente, isAdmin, logout } = useAuth();
+    const { user, isAuthenticated, logout } = useAuth();
     const navigate = useNavigate();
 
     // Dropdown state
@@ -57,13 +57,7 @@ const HomePage = () => {
 
     const handleEditProfile = () => {
         setDropdownOpen(false);
-        if (isAdmin) {
-            navigate('/admin');
-        } else if (isDocente) {
-            navigate('/docente');
-        } else {
-            navigate('/dashboard');
-        }
+        navigate('/dashboard');
     };
 
     const handleLogout = () => {
@@ -129,13 +123,7 @@ const HomePage = () => {
                     className="btn-cta"
                     onClick={() => {
                         if (isAuthenticated) {
-                            if (isAdmin) {
-                                navigate('/admin');
-                            } else if (isDocente) {
-                                navigate('/docente');
-                            } else {
-                                navigate('/dashboard');
-                            }
+                            navigate('/dashboard');
                         } else {
                             document.getElementById('planes')?.scrollIntoView({ behavior: 'smooth' });
                         }
@@ -186,12 +174,7 @@ const HomePage = () => {
                                         </>
                                     )}
                                 </ul>
-                                <button 
-                                    className="btn-subscribe"
-                                    onClick={() => navigate(`/planes/${plan.idPlan}`)}
-                                >
-                                    Elegir Plan
-                                </button>
+                                <button className="btn-subscribe">Elegir Plan</button>
                             </div>
                         );
                     })}
