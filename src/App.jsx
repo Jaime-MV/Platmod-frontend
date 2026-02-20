@@ -11,11 +11,12 @@ import HomePage from './pages/HomePage';
 import AuthPage from './pages/auth/AuthPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import StudentDashboard from './pages/student/StudentDashboard';
+import TeacherDashboard from './pages/teacher/TeacherDashboard';
 import PagoPlanes from './pages/seccionpagos/PagoPlanes';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-  const { user, isAdmin } = useAuth();
+  const { user, isAdmin, isDocente } = useAuth();
 
   return (
     <BrowserRouter>
@@ -26,9 +27,13 @@ function App() {
         <Route path="/planes/:idPlan" element={<PagoPlanes />} />
 
         {/* RUTA PROTEGIDA DE ADMIN */}
-        {/* Si isAdmin es true, deja pasar. Si no, manda al Home (/) */}
         <Route element={<ProtectedRoute isAllowed={isAdmin} redirectTo="/" />}>
           <Route path="/admin/*" element={<AdminDashboard />} />
+        </Route>
+
+        {/* RUTA PROTEGIDA DE DOCENTE */}
+        <Route element={<ProtectedRoute isAllowed={isDocente || isAdmin} redirectTo="/" />}>
+          <Route path="/docente" element={<TeacherDashboard />} />
         </Route>
 
         {/* RUTA PROTEGIDA DE ESTUDIANTE (Cualquier usuario logueado) */}

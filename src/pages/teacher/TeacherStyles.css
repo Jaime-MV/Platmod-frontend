@@ -1,0 +1,1375 @@
+/* ===========================================
+   TeacherStyles.css — Premium Teacher Dashboard
+   Architecture: CSS variables per theme
+   Every element responds to [data-theme] toggle
+   =========================================== */
+
+/* ============================================
+   THEME TOKENS — dark (default)
+   ============================================ */
+:root,
+[data-theme='dark'] {
+    /* Backgrounds */
+    --tc-bg-page: #0B0E14;
+    --tc-bg-sidebar: #0F1419;
+    --tc-bg-card: #121822;
+    --tc-bg-card-hover: #161D29;
+    --tc-bg-drawer: #161D29;
+    --tc-bg-input: rgba(0, 0, 0, 0.25);
+    --tc-bg-input-focus: #121822;
+    --tc-bg-modal-sm: #121822;
+    --tc-bg-upload: #0B0E14;
+    --tc-bg-upload-hover: #121822;
+    --tc-bg-upload-change: #161D29;
+    --tc-bg-close-btn: rgba(255, 255, 255, 0.06);
+    --tc-bg-cancel-hover: rgba(0, 0, 0, 0.2);
+    --tc-bg-tag: rgba(255, 138, 91, 0.1);
+
+    /* Text */
+    --tc-text-primary: #FAFBFC;
+    --tc-text-secondary: #8B98A8;
+    --tc-text-muted: #4B5563;
+    --tc-text-title: #FAFBFC;
+    --tc-text-card-title: #FAFBFC;
+    --tc-text-label: #8B98A8;
+    --tc-text-optional: #4B5563;
+    --tc-text-placeholder: #4B5563;
+    --tc-text-crumb: #8B98A8;
+    --tc-text-crumb-active: #FAFBFC;
+    --tc-text-crumb-sep: #4B5563;
+    --tc-text-icon: #8B98A8;
+    --tc-text-chevron: #8B98A8;
+    --tc-text-action-btn: #8B98A8;
+    --tc-text-cancel: #8B98A8;
+    --tc-text-modal-body: #8B98A8;
+    --tc-text-drag-hint: #8B98A8;
+    --tc-text-meta: #8B98A8;
+    --tc-text-tag: var(--primary-orange, #FFA87A);
+    --tc-text-empty-title: #FAFBFC;
+
+    /* Borders */
+    --tc-border-sidebar: rgba(255, 255, 255, 0.04);
+    --tc-border-sidebar-footer: rgba(255, 255, 255, 0.06);
+    --tc-border-card: rgba(255, 255, 255, 0.04);
+    --tc-border-card-hover: rgba(255, 255, 255, 0.08);
+    --tc-border-input: transparent;
+    --tc-border-input-focus: rgba(255, 138, 91, 0.3);
+    --tc-border-upload: rgba(255, 255, 255, 0.08);
+    --tc-border-upload-change: rgba(255, 255, 255, 0.08);
+    --tc-border-drawer: rgba(255, 168, 122, 0.15);
+    --tc-border-drawer-header: rgba(255, 255, 255, 0.08);
+    --tc-border-modal-sm: rgba(255, 168, 122, 0.12);
+    --tc-border-cancel: rgba(255, 255, 255, 0.08);
+    --tc-border-action-btn: rgba(255, 255, 255, 0.08);
+    --tc-border-spine: rgba(255, 255, 255, 0.08);
+
+    /* Spine node */
+    --tc-node-bg: #121822;
+    --tc-node-border: #4B5563;
+    --tc-node-bg-hover: #0B0E14;
+
+    /* Orden badge */
+    --tc-badge-bg: rgba(159, 232, 112, 0.1);
+    --tc-badge-color: #9FE870;
+
+    /* Shadows */
+    --tc-shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.3), 0 0 40px rgba(255, 168, 122, 0.05);
+    --tc-shadow-drawer: -10px 0 40px rgba(0, 0, 0, 0.3);
+    --tc-shadow-modal-sm: 0 20px 60px rgba(0, 0, 0, 0.5);
+    --tc-shadow-add-btn: 0 4px 20px rgba(255, 138, 91, 0.35), 0 0 40px rgba(255, 138, 91, 0.1);
+
+    /* Overlay */
+    --tc-overlay-bg: rgba(0, 0, 0, 0.4);
+}
+
+/* ============================================
+   THEME TOKENS — light
+   ============================================ */
+[data-theme='light'] {
+    /* Backgrounds */
+    --tc-bg-page: #F8FAFC;
+    --tc-bg-sidebar: #1a2233;
+    /* sidebar stays dark */
+    --tc-bg-card: #FFFFFF;
+    --tc-bg-card-hover: #F8FAFC;
+    --tc-bg-drawer: #FFFFFF;
+    --tc-bg-input: #F1F5F9;
+    --tc-bg-input-focus: #FFFFFF;
+    --tc-bg-modal-sm: #FFFFFF;
+    --tc-bg-upload: #F8FAFC;
+    --tc-bg-upload-hover: #F1F5F9;
+    --tc-bg-upload-change: #F1F5F9;
+    --tc-bg-close-btn: rgba(0, 0, 0, 0.04);
+    --tc-bg-cancel-hover: #F1F5F9;
+    --tc-bg-tag: rgba(255, 138, 91, 0.08);
+
+    /* Text */
+    --tc-text-primary: #1A2233;
+    --tc-text-secondary: #64748B;
+    --tc-text-muted: #94A3B8;
+    --tc-text-title: #1A2233;
+    --tc-text-card-title: #1A2233;
+    --tc-text-label: #64748B;
+    --tc-text-optional: #94A3B8;
+    --tc-text-placeholder: #94A3B8;
+    --tc-text-crumb: #64748B;
+    --tc-text-crumb-active: #1A2233;
+    --tc-text-crumb-sep: #94A3B8;
+    --tc-text-icon: #94A3B8;
+    --tc-text-chevron: #94A3B8;
+    --tc-text-action-btn: #94A3B8;
+    --tc-text-cancel: #64748B;
+    --tc-text-modal-body: #64748B;
+    --tc-text-drag-hint: #94A3B8;
+    --tc-text-meta: #64748B;
+    --tc-text-tag: var(--primary-orange, #FFA87A);
+    --tc-text-empty-title: #1A2233;
+
+    /* Borders */
+    --tc-border-sidebar: rgba(255, 255, 255, 0.06);
+    --tc-border-sidebar-footer: rgba(255, 255, 255, 0.06);
+    --tc-border-card: rgba(0, 0, 0, 0.08);
+    --tc-border-card-hover: rgba(255, 138, 91, 0.2);
+    --tc-border-input: #CBD5E1;
+    --tc-border-input-focus: var(--primary-orange, #FFA87A);
+    --tc-border-upload: #CBD5E1;
+    --tc-border-upload-change: #CBD5E1;
+    --tc-border-drawer: rgba(0, 0, 0, 0.1);
+    --tc-border-drawer-header: rgba(0, 0, 0, 0.08);
+    --tc-border-modal-sm: rgba(0, 0, 0, 0.1);
+    --tc-border-cancel: rgba(0, 0, 0, 0.12);
+    --tc-border-action-btn: rgba(0, 0, 0, 0.1);
+    --tc-border-spine: rgba(0, 0, 0, 0.1);
+
+    /* Spine node */
+    --tc-node-bg: #FFFFFF;
+    --tc-node-border: #CBD5E1;
+    --tc-node-bg-hover: #F8FAFC;
+
+    /* Orden badge */
+    --tc-badge-bg: rgba(122, 181, 71, 0.12);
+    --tc-badge-color: #5a8f28;
+
+    /* Shadows */
+    --tc-shadow-card-hover: 0 12px 40px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(255, 138, 91, 0.08);
+    --tc-shadow-drawer: -10px 0 60px rgba(0, 0, 0, 0.1);
+    --tc-shadow-modal-sm: 0 20px 60px rgba(0, 0, 0, 0.12);
+    --tc-shadow-add-btn: 0 4px 15px rgba(255, 138, 91, 0.3);
+
+    /* Overlay */
+    --tc-overlay-bg: rgba(0, 0, 0, 0.25);
+}
+
+
+/* ============================================
+   LAYOUT
+   ============================================ */
+.tc-layout {
+    display: flex;
+    min-height: 100vh;
+    background: var(--tc-bg-page);
+    transition: background 0.3s ease;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+.tc-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    height: 100vh;
+    background: var(--tc-bg-sidebar);
+    border-right: 1px solid var(--tc-border-sidebar);
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.tc-sidebar-accent {
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-orange, #FFA87A), #7AB547);
+    flex-shrink: 0;
+}
+
+[data-theme='dark'] .tc-sidebar-accent {
+    box-shadow: 0 0 18px rgba(122, 181, 71, 0.4), 0 0 40px rgba(122, 181, 71, 0.15);
+}
+
+.tc-sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 28px 16px 20px;
+    overflow-y: auto;
+}
+
+/* Logo always white — sidebar is always dark */
+.tc-sidebar-logo {
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #FAFBFC;
+    margin-bottom: 48px;
+    padding-left: 12px;
+    letter-spacing: -0.5px;
+}
+
+.tc-sidebar-logo .dot {
+    color: var(--primary-orange, #FFA87A);
+}
+
+.tc-sidebar-nav {
+    flex: 1;
+}
+
+.tc-sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* Sidebar items always use dark-sidebar palette regardless of theme */
+.tc-sidebar-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 13px 16px;
+    border-radius: 12px;
+    color: #8B98A8;
+    font-size: 0.95rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+}
+
+.tc-sidebar-item:hover {
+    color: #CBD5E1;
+    background-color: rgba(255, 255, 255, 0.06);
+}
+
+.tc-sidebar-item.active {
+    color: var(--primary-orange, #FFA87A);
+    background: rgba(255, 138, 91, 0.12);
+    font-weight: 600;
+}
+
+.tc-sidebar-item.active svg {
+    color: var(--primary-orange, #FFA87A);
+}
+
+.tc-sidebar-footer {
+    border-top: 1px solid var(--tc-border-sidebar-footer);
+    padding-top: 16px;
+    margin-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.tc-theme-btn:hover {
+    color: #FFC966 !important;
+    background-color: rgba(255, 201, 102, 0.08) !important;
+}
+
+.tc-profile-btn {
+    pointer-events: none;
+}
+
+.tc-logout-btn:hover {
+    color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.08) !important;
+}
+
+/* ============================================
+   MAIN CONTENT
+   ============================================ */
+.tc-content {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    min-height: 100vh;
+    padding: 32px 40px;
+    background: var(--tc-bg-page);
+    overflow-y: auto;
+    transition: background 0.3s ease;
+}
+
+[data-theme='dark'] .tc-content {
+    background-image:
+        radial-gradient(circle at 20% 50%, rgba(255, 168, 122, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(159, 232, 112, 0.015) 0%, transparent 50%);
+    background-attachment: fixed;
+}
+
+/* ============================================
+   BREADCRUMB
+   ============================================ */
+.tc-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+}
+
+.tc-crumb {
+    background: none;
+    border: none;
+    color: var(--tc-text-crumb);
+    font-size: 0.88rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.tc-crumb:hover {
+    color: var(--primary-orange, #FFA87A);
+    background: rgba(255, 138, 91, 0.06);
+}
+
+.tc-crumb.active {
+    color: var(--tc-text-crumb-active);
+    font-weight: 600;
+    cursor: default;
+}
+
+.tc-crumb-sep {
+    color: var(--tc-text-crumb-sep);
+    flex-shrink: 0;
+}
+
+/* ============================================
+   PAGE HEADER
+   ============================================ */
+.tc-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 16px;
+}
+
+.tc-page-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--tc-text-title);
+    margin-bottom: 6px;
+    transition: color 0.3s ease;
+}
+
+.tc-page-sub {
+    color: var(--tc-text-secondary);
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+.tc-add-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, var(--primary-orange, #FFA87A), #FF8A5B);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    box-shadow: var(--tc-shadow-add-btn);
+}
+
+.tc-add-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 138, 91, 0.45);
+}
+
+/* ============================================
+   LOADING & EMPTY STATES
+   ============================================ */
+.tc-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    padding: 80px 0;
+    color: var(--tc-text-secondary);
+}
+
+.tc-spinner {
+    width: 36px;
+    height: 36px;
+    border: 3px solid rgba(255, 138, 91, 0.2);
+    border-top-color: var(--primary-orange, #FFA87A);
+    border-radius: 50%;
+    animation: tc-spin 0.8s linear infinite;
+}
+
+.tc-spinner-sm {
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 138, 91, 0.3);
+    border-top-color: var(--primary-orange, #FFA87A);
+    border-radius: 50%;
+    animation: tc-spin 0.8s linear infinite;
+    display: inline-block;
+}
+
+@keyframes tc-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.tc-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 80px 0;
+    color: var(--tc-text-secondary);
+    text-align: center;
+}
+
+.tc-empty h3 {
+    font-size: 1.2rem;
+    color: var(--tc-text-empty-title);
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+/* ============================================
+   COURSE GRID
+   ============================================ */
+.tc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.tc-curso-card {
+    background: var(--tc-bg-card);
+    border: 1px solid var(--tc-border-card);
+    border-radius: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+
+.tc-curso-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--tc-shadow-card-hover);
+    border-color: var(--tc-border-card-hover);
+}
+
+.tc-curso-img {
+    height: 160px;
+    background-size: cover;
+    background-position: center;
+    background-color: rgba(255, 138, 91, 0.08);
+}
+
+.tc-curso-body {
+    padding: 20px;
+}
+
+.tc-curso-body h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--tc-text-card-title);
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+}
+
+.tc-curso-desc {
+    color: var(--tc-text-secondary);
+    font-size: 0.88rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+    transition: color 0.3s ease;
+}
+
+.tc-curso-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tc-curso-count {
+    font-size: 0.82rem;
+    color: var(--tc-text-meta);
+    transition: color 0.3s ease;
+}
+
+.tc-curso-action {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--tc-text-muted);
+    font-size: 0.82rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.tc-curso-card:hover .tc-curso-action {
+    color: var(--primary-orange, #FFA87A);
+}
+
+/* ============================================
+   LECCION CARD (card style with action buttons)
+   ============================================ */
+.tc-leccion-card {
+    background: var(--tc-bg-card);
+    border: 1px solid var(--tc-border-card);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.25s ease;
+}
+
+.tc-leccion-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--tc-shadow-card-hover);
+    border-color: var(--tc-border-card-hover);
+}
+
+/* Image / placeholder area — clickable, relative for button overlay */
+.tc-leccion-img-wrap {
+    position: relative;
+    cursor: pointer;
+}
+
+/* Placeholder when no portada */
+.tc-leccion-img-placeholder {
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 138, 91, 0.06);
+    color: var(--tc-text-muted);
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.tc-leccion-card:hover .tc-leccion-img-placeholder {
+    background: rgba(255, 138, 91, 0.1);
+    color: var(--primary-orange, #FFA87A);
+}
+
+/* Action buttons overlay — top-right corner of image */
+.tc-leccion-card-actions {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 6px;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 10;
+}
+
+.tc-leccion-card:hover .tc-leccion-card-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.tc-card-edit-btn,
+.tc-card-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(8px);
+}
+
+.tc-card-edit-btn {
+    background: rgba(15, 20, 30, 0.75);
+    color: #CBD5E1;
+}
+
+.tc-card-edit-btn:hover {
+    background: var(--primary-orange, #FFA87A);
+    color: #0B0E14;
+}
+
+.tc-card-delete-btn {
+    background: rgba(15, 20, 30, 0.75);
+    color: #CBD5E1;
+}
+
+.tc-card-delete-btn:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* Light mode adjustments for card action buttons */
+[data-theme='light'] .tc-card-edit-btn,
+[data-theme='light'] .tc-card-delete-btn {
+    background: rgba(255, 255, 255, 0.85);
+    color: #475569;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme='light'] .tc-card-edit-btn:hover {
+    background: var(--primary-orange, #FFA87A);
+    color: #fff;
+}
+
+[data-theme='light'] .tc-card-delete-btn:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* ============================================
+   LIST — CURRICULUM SPINE
+   ============================================ */
+.tc-list {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-left: 28px;
+    gap: 16px;
+}
+
+.tc-list::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    bottom: 24px;
+    left: 8px;
+    width: 2px;
+    background: var(--tc-border-spine);
+    z-index: 1;
+    transition: background 0.3s ease;
+}
+
+.tc-item-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--tc-bg-card);
+    border: 1px solid var(--tc-border-card);
+    border-radius: 10px;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    z-index: 2;
+}
+
+/* Spine bullet */
+.tc-item-card::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -25px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--tc-node-bg);
+    border: 2px solid var(--tc-node-border);
+    transition: border-color 0.2s ease, background 0.2s ease;
+    z-index: 2;
+}
+
+.tc-item-card:hover {
+    background: var(--tc-bg-card-hover);
+    border-color: var(--tc-border-card-hover);
+}
+
+.tc-item-card:hover::before {
+    border-color: var(--primary-orange, #FFA87A);
+    background: var(--tc-node-bg-hover);
+}
+
+.tc-item-main {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex: 1;
+    cursor: pointer;
+    min-width: 0;
+}
+
+.tc-item-icon {
+    color: var(--tc-text-icon);
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.tc-item-card:hover .tc-item-icon {
+    color: var(--primary-orange, #FFA87A);
+}
+
+.tc-item-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.tc-item-info h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--tc-text-card-title);
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.tc-item-meta {
+    font-size: 0.78rem;
+    color: var(--tc-text-meta);
+    margin-top: 2px;
+    display: block;
+    transition: color 0.3s ease;
+}
+
+.tc-item-thumb {
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.tc-item-url {
+    font-size: 0.78rem;
+    color: var(--tc-text-secondary);
+    margin-top: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.3s ease;
+}
+
+.tc-item-chevron {
+    color: var(--tc-text-chevron);
+    flex-shrink: 0;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.tc-item-card:hover .tc-item-chevron {
+    transform: translateX(4px);
+    color: var(--primary-orange, #FFA87A);
+}
+
+.tc-item-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 12px;
+    flex-shrink: 0;
+}
+
+.tc-edit-btn,
+.tc-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: 1px solid var(--tc-border-action-btn);
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: var(--tc-text-action-btn);
+}
+
+.tc-edit-btn:hover {
+    color: var(--primary-orange, #FFA87A);
+    border-color: var(--primary-orange, #FFA87A);
+    background: rgba(255, 138, 91, 0.06);
+}
+
+.tc-delete-btn:hover {
+    color: #ef4444;
+    border-color: #ef4444;
+    background: rgba(239, 68, 68, 0.06);
+}
+
+/* ============================================
+   DRAG & DROP
+   ============================================ */
+.tc-drag-hint {
+    font-size: 0.82rem;
+    color: var(--tc-text-drag-hint);
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+}
+
+.tc-grip {
+    color: var(--tc-text-muted);
+    cursor: grab;
+    flex-shrink: 0;
+    transition: color 0.2s ease;
+}
+
+.tc-grip:hover {
+    color: var(--primary-orange, #FFA87A);
+}
+
+.tc-draggable {
+    cursor: default;
+}
+
+.tc-draggable.dragging {
+    opacity: 0.5;
+    border-style: dashed;
+    border-color: var(--primary-orange, #FFA87A);
+}
+
+.tc-orden-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--tc-badge-bg);
+    color: var(--tc-badge-color);
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.tc-modulo-desc {
+    font-size: 0.82rem;
+    color: var(--tc-text-secondary);
+    margin-top: 4px;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+}
+
+.tc-modulo-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+}
+
+.tc-tipo-tag {
+    padding: 2px 10px;
+    background: var(--tc-bg-tag);
+    color: var(--tc-text-tag);
+    border-radius: 50px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    transition: background 0.3s ease;
+}
+
+.tc-resource-link {
+    font-size: 0.78rem;
+    color: var(--tc-text-secondary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tc-resource-link:hover {
+    color: var(--primary-orange, #FFA87A);
+}
+
+/* ============================================
+   MODAL OVERLAY
+   ============================================ */
+.tc-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--tc-overlay-bg);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-end;
+    z-index: 1000;
+    animation: tc-fade-in 0.2s ease;
+}
+
+@keyframes tc-fade-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ============================================
+   DRAWER (slide-out form panel)
+   ============================================ */
+.tc-drawer {
+    background: var(--tc-bg-drawer);
+    border-left: 1px solid var(--tc-border-drawer);
+    width: 100%;
+    max-width: 480px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    animation: tc-slide-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: var(--tc-shadow-drawer);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+@keyframes tc-slide-in {
+    from {
+        transform: translateX(100%);
+    }
+
+    to {
+        transform: translateX(0);
+    }
+}
+
+.tc-drawer-header {
+    padding: 24px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--tc-border-drawer-header);
+    transition: border-color 0.3s ease;
+}
+
+.tc-drawer-header h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--tc-text-title);
+    margin: 0;
+    transition: color 0.3s ease;
+}
+
+.tc-drawer-body {
+    flex: 1;
+    padding: 32px;
+    overflow-y: auto;
+}
+
+/* ============================================
+   MODAL CLOSE BUTTON
+   ============================================ */
+.tc-modal-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: var(--tc-bg-close-btn);
+    color: var(--tc-text-secondary);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tc-modal-close:hover {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+}
+
+/* ============================================
+   DELETE CONFIRMATION MODAL (centered)
+   ============================================ */
+.tc-modal-sm-overlay {
+    justify-content: center;
+    align-items: center;
+}
+
+.tc-modal-sm-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.tc-modal-sm {
+    background: var(--tc-bg-modal-sm);
+    border: 1px solid var(--tc-border-modal-sm);
+    border-radius: 12px;
+    padding: 32px;
+    width: 90%;
+    max-width: 420px;
+    text-align: center;
+    animation: tc-modal-in 0.2s ease;
+    box-shadow: var(--tc-shadow-modal-sm);
+    transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+@keyframes tc-modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.tc-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.tc-modal-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--tc-text-title);
+    transition: color 0.3s ease;
+}
+
+.tc-modal-delete-icon {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    border-radius: 50%;
+}
+
+.tc-modal-sm h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--tc-text-title);
+    margin-bottom: 8px;
+    transition: color 0.3s ease;
+}
+
+.tc-modal-text {
+    color: var(--tc-text-modal-body);
+    font-size: 0.92rem;
+    margin-bottom: 24px;
+    line-height: 1.5;
+    transition: color 0.3s ease;
+}
+
+.tc-modal-text strong {
+    color: var(--tc-text-title);
+}
+
+/* ============================================
+   FORM ELEMENTS
+   ============================================ */
+.tc-form-group {
+    margin-bottom: 20px;
+}
+
+.tc-form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--tc-text-label);
+    margin-bottom: 6px;
+    transition: color 0.3s ease;
+}
+
+.tc-optional {
+    color: var(--tc-text-optional);
+    font-size: 0.75rem;
+    transition: color 0.3s ease;
+}
+
+.tc-form-group input,
+.tc-form-group select,
+.tc-form-group textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--tc-border-input);
+    border-radius: 8px;
+    background: var(--tc-bg-input);
+    color: var(--tc-text-primary);
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.tc-form-group input:focus,
+.tc-form-group select:focus,
+.tc-form-group textarea:focus {
+    border-color: var(--tc-border-input-focus);
+    background: var(--tc-bg-input-focus);
+}
+
+.tc-form-group input::placeholder,
+.tc-form-group textarea::placeholder {
+    color: var(--tc-text-placeholder);
+}
+
+.tc-form-group select {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+/* ============================================
+   UPLOAD AREA
+   ============================================ */
+.tc-upload-area {
+    border: 2px dashed var(--tc-border-upload);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: var(--tc-bg-upload);
+}
+
+.tc-upload-area:hover {
+    border-color: var(--primary-orange, #FFA87A);
+    background: var(--tc-bg-upload-hover);
+}
+
+.tc-upload-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    color: var(--tc-text-secondary);
+}
+
+.tc-upload-icon {
+    margin-bottom: 4px;
+    color: var(--tc-text-muted);
+    transition: color 0.2s ease;
+}
+
+.tc-upload-area:hover .tc-upload-icon {
+    color: var(--primary-orange, #FFA87A);
+}
+
+.tc-upload-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--tc-text-primary);
+    transition: color 0.3s ease;
+}
+
+.tc-upload-hint {
+    font-size: 0.8rem;
+    color: var(--tc-text-muted);
+    transition: color 0.3s ease;
+}
+
+.tc-upload-selected {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.tc-upload-img-wrapper {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #000;
+}
+
+.tc-upload-preview-scaled {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.tc-upload-name {
+    font-weight: 500;
+    color: var(--tc-text-primary);
+    word-break: break-all;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+}
+
+.tc-upload-change-btn {
+    padding: 6px 14px;
+    background: var(--tc-bg-upload-change);
+    border: 1px solid var(--tc-border-upload-change);
+    border-radius: 6px;
+    color: var(--tc-text-secondary);
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tc-upload-change-btn:hover {
+    color: var(--primary-orange, #FFA87A);
+    border-color: var(--primary-orange, #FFA87A);
+}
+
+.tc-upload-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: var(--primary-orange, #FFA87A);
+    font-weight: 500;
+}
+
+/* ============================================
+   MODAL FOOTER BUTTONS
+   ============================================ */
+.tc-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.tc-cancel-btn {
+    padding: 10px 20px;
+    background: transparent;
+    border: 1px solid var(--tc-border-cancel);
+    border-radius: 8px;
+    color: var(--tc-text-cancel);
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tc-cancel-btn:hover {
+    color: var(--tc-text-primary);
+    background: var(--tc-bg-cancel-hover);
+}
+
+.tc-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 24px;
+    background: var(--primary-orange, #FFA87A);
+    color: #0B0E14;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tc-submit-btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+}
+
+.tc-submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.tc-danger-btn {
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+
+.tc-danger-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(239, 68, 68, 0.45);
+}
+
+.tc-danger-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1024px) {
+    .tc-sidebar {
+        width: 220px;
+    }
+
+    .tc-content {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+        padding: 24px 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .tc-sidebar {
+        width: 60px;
+    }
+
+    .tc-sidebar-inner {
+        padding: 20px 8px;
+        align-items: center;
+    }
+
+    .tc-sidebar-logo,
+    .tc-sidebar-item span {
+        display: none;
+    }
+
+    .tc-sidebar-item {
+        justify-content: center;
+        padding: 12px;
+    }
+
+    .tc-content {
+        margin-left: 60px;
+        width: calc(100% - 60px);
+        padding: 20px 16px;
+    }
+
+    .tc-section-header {
+        flex-direction: column;
+    }
+
+    .tc-page-title {
+        font-size: 1.5rem;
+    }
+
+    .tc-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tc-item-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .tc-item-actions {
+        margin-left: 0;
+        justify-content: flex-end;
+    }
+
+    .tc-drawer {
+        max-width: 100%;
+    }
+}

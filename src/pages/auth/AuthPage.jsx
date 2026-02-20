@@ -93,6 +93,9 @@ const AuthPage = () => {
             if (data.rol === 'ADMINISTRADOR') {
               console.log("Redirigiendo a Dashboard Admin...");
               navigate('/admin');
+            } else if (data.rol === 'DOCENTE') {
+              console.log("Redirigiendo a Dashboard Docente...");
+              navigate('/docente');
             } else {
               console.log("Redirigiendo a Dashboard Estudiante...");
               navigate('/dashboard');

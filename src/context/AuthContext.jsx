@@ -94,6 +94,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         isAuthenticated: !!user,
         isAdmin: user?.rol === 'ADMINISTRADOR',
+        isDocente: user?.rol === 'DOCENTE',
         loading
     };
 
