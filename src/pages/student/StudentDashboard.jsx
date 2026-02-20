@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import CourseGrid from '../../components/CourseGrid';
+import ForoPage from './ForoPage';
 import { getCursos } from '../../services/api';
 import {
     Home,
@@ -11,6 +12,7 @@ import {
     TrendingUp,
     Award,
     Bell,
+    HelpCircle,
     User,
     LogOut,
     Sun,
@@ -26,6 +28,7 @@ const MENU_ITEMS = [
     { id: 'progreso', label: 'Mi progreso', icon: TrendingUp },
     { id: 'certificados', label: 'Mis certificados', icon: Award },
     { id: 'notificaciones', label: 'Notificaciones', icon: Bell },
+    { id: 'foro', label: 'Foro Q&A', icon: HelpCircle },
 ];
 
 const PLACEHOLDER_DATA = {
@@ -86,6 +89,8 @@ const StudentDashboard = () => {
 
     const renderContent = () => {
         switch (activeTab) {
+            case 'foro':
+                return <ForoPage />;
             case 'inicio':
                 return (
                     <div>
@@ -99,6 +104,8 @@ const StudentDashboard = () => {
                         </div>
                     </div>
                 );
+            case 'foro':
+                return <ForoPage />;
             case 'perfil':
                 return (
                     <div className="profile-section">

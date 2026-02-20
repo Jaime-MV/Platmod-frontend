@@ -185,3 +185,116 @@ export const deleteCurso = async (id) => {
     if (!response.ok) throw new Error('Error al eliminar curso');
     return true;
 };
+
+// --- FORO SERVICES ---
+
+export const getPreguntas = async () => {
+    try {
+        const response = await fetch(`${API_URL}/foro/preguntas`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Error al cargar preguntas del foro');
+        return await response.json();
+    } catch (error) {
+        console.error("Error getPreguntas:", error);
+        return [];
+    }
+};
+
+export const getPregunta = async (id) => {
+    try {
+        const response = await fetch(`${API_URL}/foro/preguntas/${id}`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Error al cargar pregunta');
+        return await response.json();
+    } catch (error) {
+        console.error("Error getPregunta:", error);
+        return null;
+    }
+};
+
+export const crearPregunta = async (data) => {
+    const response = await fetch(`${API_URL}/foro/preguntas`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('Error al crear pregunta');
+    return await response.json();
+};
+
+export const getRespuestas = async (idPregunta) => {
+    try {
+        const response = await fetch(`${API_URL}/foro/preguntas/${idPregunta}/respuestas`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Error al cargar respuestas');
+        return await response.json();
+    } catch (error) {
+        console.error("Error getRespuestas:", error);
+        return [];
+    }
+};
+
+export const crearRespuesta = async (idPregunta, data) => {
+    const response = await fetch(`${API_URL}/foro/preguntas/${idPregunta}/respuestas`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('Error al crear respuesta');
+    return await response.json();
+};
+
+export const getMisPreguntas = async () => {
+    try {
+        const response = await fetch(`${API_URL}/foro/mis-preguntas`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Error al cargar mis preguntas');
+        return await response.json();
+    } catch (error) {
+        console.error("Error getMisPreguntas:", error);
+        return [];
+    }
+};
+
+export const getFavoritos = async () => {
+    try {
+        const response = await fetch(`${API_URL}/foro/favoritos`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Error al cargar favoritos');
+        return await response.json();
+    } catch (error) {
+        console.error("Error getFavoritos:", error);
+        return [];
+    }
+};
+
+export const toggleFavorito = async (idPregunta) => {
+    const response = await fetch(`${API_URL}/foro/favoritos/${idPregunta}`, {
+        method: 'POST',
+        headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Error al cambiar favorito');
+    return await response.json();
+};
+
+export const eliminarPregunta = async (id) => {
+    const response = await fetch(`${API_URL}/foro/preguntas/${id}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Error al eliminar pregunta');
+    }
+    return true;
+};
