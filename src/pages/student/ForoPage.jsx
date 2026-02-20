@@ -51,6 +51,34 @@ const ForoPage = () => {
     const [nuevoContenido, setNuevoContenido] = useState('');
     const [nuevaCategoria, setNuevaCategoria] = useState('General');
     const [nuevaRespuesta, setNuevaRespuesta] = useState('');
+    // Para adjuntar archivo en respuesta
+    const [archivoRespuesta, setArchivoRespuesta] = useState(null);
+    const [subiendoArchivoRespuesta, setSubiendoArchivoRespuesta] = useState(false);
+    const [errorArchivoRespuesta, setErrorArchivoRespuesta] = useState('');
+        // Manejar selección de archivo para respuesta
+        const handleFileSelectRespuesta = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            setErrorArchivoRespuesta('');
+            const maxSize = 5 * 1024 * 1024;
+            if (file.size > maxSize) {
+                setErrorArchivoRespuesta('El archivo excede el límite de 5MB');
+                return;
+            }
+            const allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp',
+                'application/pdf', 'application/msword',
+                'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+            if (!allowed.includes(file.type)) {
+                setErrorArchivoRespuesta('Tipo no permitido. Usa PNG, JPG, PDF o Word');
+                return;
+            }
+            setArchivoRespuesta(file);
+        };
+
+        const handleRemoveFileRespuesta = () => {
+            setArchivoRespuesta(null);
+            setErrorArchivoRespuesta('');
+        };
     const [enviando, setEnviando] = useState(false);
 
     // File upload
@@ -166,11 +194,32 @@ const ForoPage = () => {
         if (!nuevaRespuesta.trim() || !preguntaActual) return;
 
         setEnviando(true);
+        let archivoUrl = null;
+        let archivoNombre = null;
         try {
+            // Subir archivo si hay
+            if (archivoRespuesta) {
+                setSubiendoArchivoRespuesta(true);
+                try {
+                    const result = await uploadForoFile(archivoRespuesta);
+                    archivoUrl = result.url;
+                    archivoNombre = result.nombre;
+                } catch (err) {
+                    setErrorArchivoRespuesta(err.message);
+                    setSubiendoArchivoRespuesta(false);
+                    setEnviando(false);
+                    return;
+                }
+                setSubiendoArchivoRespuesta(false);
+            }
             await crearRespuesta(preguntaActual.idPregunta, {
-                contenido: nuevaRespuesta.trim()
+                contenido: nuevaRespuesta.trim(),
+                archivoUrl,
+                archivoNombre
             });
             setNuevaRespuesta('');
+            setArchivoRespuesta(null);
+            setErrorArchivoRespuesta('');
             const data = await getRespuestas(preguntaActual.idPregunta);
             setRespuestas(data);
             setPreguntaActual(prev => ({
@@ -477,6 +526,7 @@ const ForoPage = () => {
                                     </div>
                                 )}
                                 <p className="foro-respuesta-contenido">{r.contenido}</p>
+                                {renderAttachment(r.archivoUrl, r.archivoNombre)}
                                 <div className="foro-respuesta-footer">
                                     <div className="foro-autor-info">
                                         <div className="foro-avatar-sm"><User size={14} /></div>
@@ -500,14 +550,36 @@ const ForoPage = () => {
                             onChange={(e) => setNuevaRespuesta(e.target.value)}
                             rows={3}
                         />
+                        <label className="foro-file-input foro-file-input-respuesta">
+                            <Paperclip size={16} />
+                            <input
+                                type="file"
+                                accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx"
+                                onChange={handleFileSelectRespuesta}
+                                hidden
+                            />
+                        </label>
                         <button
                             type="submit"
                             className="foro-responder-btn"
-                            disabled={enviando || !nuevaRespuesta.trim()}
+                            disabled={enviando || subiendoArchivoRespuesta || !nuevaRespuesta.trim()}
                         >
-                            <Send size={18} />
+                            {subiendoArchivoRespuesta ? 'Subiendo...' : <Send size={18} />}
                         </button>
                     </div>
+                    {archivoRespuesta && (
+                        <div className="foro-file-preview foro-file-preview-respuesta">
+                            <div className="foro-file-info">
+                                {archivoRespuesta.type.startsWith('image/') ? <Image size={16} /> : <FileText size={16} />}
+                                <span className="foro-file-name">{archivoRespuesta.name}</span>
+                                <span className="foro-file-size">{(archivoRespuesta.size / 1024).toFixed(0)} KB</span>
+                            </div>
+                            <button type="button" className="foro-file-remove" onClick={handleRemoveFileRespuesta}>
+                                <X size={14} />
+                            </button>
+                        </div>
+                    )}
+                    {errorArchivoRespuesta && <p className="foro-file-error">{errorArchivoRespuesta}</p>}
                 </form>
             </div>
         </div>

@@ -226,6 +226,7 @@ export const crearPregunta = async (data) => {
     return await response.json();
 };
 
+// Listar respuestas — ahora devuelve archivoUrl + archivoNombre en cada item (si el backend lo provee)
 export const getRespuestas = async (idPregunta) => {
     try {
         const response = await fetch(`${API_URL}/foro/preguntas/${idPregunta}/respuestas`, {
@@ -233,6 +234,7 @@ export const getRespuestas = async (idPregunta) => {
             headers: getAuthHeaders()
         });
         if (!response.ok) throw new Error('Error al cargar respuestas');
+        // Se espera que cada respuesta tenga archivoUrl y archivoNombre si existen
         return await response.json();
     } catch (error) {
         console.error("Error getRespuestas:", error);
@@ -240,7 +242,9 @@ export const getRespuestas = async (idPregunta) => {
     }
 };
 
+// Crear respuesta — ahora enviar archivoUrl + archivoNombre en el body si corresponde
 export const crearRespuesta = async (idPregunta, data) => {
+    // data debe incluir: { texto, archivoUrl, archivoNombre }
     const response = await fetch(`${API_URL}/foro/preguntas/${idPregunta}/respuestas`, {
         method: 'POST',
         headers: getAuthHeaders(),
