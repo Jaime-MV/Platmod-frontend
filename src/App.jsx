@@ -8,9 +8,10 @@ import { useAuth } from './context/AuthContext';
 
 // Tus otros componentes
 import HomePage from './pages/HomePage';
-import AuthPage from './pages/AuthPage';
+import AuthPage from './pages/auth/AuthPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import StudentDashboard from './pages/student/StudentDashboard';
+import PagoPlanes from './pages/seccionpagos/PagoPlanes';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         {/* Rutas Públicas */}
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<AuthPage />} />
+        <Route path="/planes/:idPlan" element={<PagoPlanes />} />
 
         {/* RUTA PROTEGIDA DE ADMIN */}
         {/* Si isAdmin es true, deja pasar. Si no, manda al Home (/) */}
