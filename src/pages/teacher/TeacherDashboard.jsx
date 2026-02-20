@@ -11,7 +11,7 @@ import { uploadDocenteFile } from '../../services/supabase';
 import {
     Home, BookOpen, Layers, User, LogOut, Sun, Moon,
     Plus, Edit3, Trash2, X, Send, GripVertical,
-    ChevronRight, FileText, Upload
+    ChevronRight, FileText, Upload, Video, MonitorPlay, FileDown
 } from 'lucide-react';
 import './TeacherStyles.css';
 
@@ -51,10 +51,7 @@ const TeacherDashboard = () => {
     // Form fields - Módulo
     const [formTituloSeccion, setFormTituloSeccion] = useState('');
     const [formDescripcion, setFormDescripcion] = useState('');
-    const [formUrlRecurso, setFormUrlRecurso] = useState('');
-    const [formRecursoMode, setFormRecursoMode] = useState('url');
-    const [recursoFile, setRecursoFile] = useState(null);
-    const [recursoPreview, setRecursoPreview] = useState('');
+    const [formRecursos, setFormRecursos] = useState([]); // Array of { id, url, name, file, type, preview }
     const [uploadingRecurso, setUploadingRecurso] = useState(false);
     const recursoInputRef = useRef(null);
     const [formOrden, setFormOrden] = useState('');
@@ -111,8 +108,7 @@ const TeacherDashboard = () => {
         setFormTitulo(''); setFormPortadaUrl(''); setFormPortadaMode('url');
         setPortadaFile(null); setPortadaPreview('');
         setFormTituloSeccion(''); setFormDescripcion('');
-        setFormUrlRecurso(''); setFormRecursoMode('url');
-        setRecursoFile(null); setRecursoPreview('');
+        setFormRecursos([]);
         setFormOrden('');
     };
 
@@ -133,9 +129,20 @@ const TeacherDashboard = () => {
         setModalMode('editar'); setModalTarget(modulo);
         setFormTituloSeccion(modulo.tituloSeccion || '');
         setFormDescripcion(modulo.descripcion || '');
-        setFormUrlRecurso(modulo.urlRecurso || '');
-        setFormRecursoMode('url');
-        setRecursoFile(null); setRecursoPreview('');
+
+        // Load existing resources if any
+        try {
+            const parsedRecursos = modulo.recursos ? JSON.parse(modulo.recursos) : [];
+            setFormRecursos(parsedRecursos.map((r, i) => ({
+                id: `existing-${i}`,
+                url: r.url,
+                name: r.nombre,
+                type: 'existing'
+            })));
+        } catch (e) {
+            setFormRecursos([]);
+        }
+
         setFormOrden(modulo.orden?.toString() || '');
         setShowModal(true);
     };
@@ -156,14 +163,27 @@ const TeacherDashboard = () => {
     };
 
     const handleRecursoFileChange = (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        setRecursoFile(file);
-        if (file.type.startsWith('image/')) {
-            setRecursoPreview(URL.createObjectURL(file));
-        } else {
-            setRecursoPreview('');
-        }
+        const files = Array.from(e.target.files);
+        if (files.length === 0) return;
+
+        const newRecursos = files.map(file => {
+            const isImage = file.type.startsWith('image/');
+            return {
+                id: `new-${Date.now()}-${Math.random()}`,
+                file: file,
+                name: file.name,
+                type: 'new',
+                preview: isImage ? URL.createObjectURL(file) : ''
+            };
+        });
+
+        setFormRecursos(prev => [...prev, ...newRecursos]);
+        // Clear input to allow uploading same file again
+        if (recursoInputRef.current) recursoInputRef.current.value = '';
+    };
+
+    const handleRemoveRecurso = (id) => {
+        setFormRecursos(prev => prev.filter(r => r.id !== id));
     };
 
     // ============ CRUD: LECCIONES ============
@@ -213,17 +233,28 @@ const TeacherDashboard = () => {
         if (!formTituloSeccion.trim()) return;
         setSubmitting(true);
         try {
-            let finalUrlRecurso = formUrlRecurso.trim() || null;
-            if (recursoFile) {
-                setUploadingRecurso(true);
-                const result = await uploadDocenteFile(recursoFile);
-                finalUrlRecurso = result.url;
-                setUploadingRecurso(false);
+            const finalRecursos = [];
+
+            // Subir archivos nuevos secuencialmente (o mantener los existentes)
+            for (const rec of formRecursos) {
+                if (rec.type === 'new') {
+                    setUploadingRecurso(true);
+                    const result = await uploadDocenteFile(rec.file);
+                    finalRecursos.push({ url: result.url, nombre: result.nombre || rec.name });
+                } else if (rec.type === 'existing') {
+                    finalRecursos.push({ url: rec.url, nombre: rec.name });
+                }
             }
+            setUploadingRecurso(false);
+
             const data = { tituloSeccion: formTituloSeccion.trim() };
             if (formDescripcion.trim()) data.descripcion = formDescripcion.trim();
-            if (finalUrlRecurso) data.urlRecurso = finalUrlRecurso;
+
+            // Send as JSON string matching the backend expectation
+            data.recursos = JSON.stringify(finalRecursos);
+
             if (formOrden) data.orden = parseInt(formOrden);
+
             if (modalMode === 'crear') {
                 await crearModulo(leccionActual.idLeccion, data);
             } else {
@@ -405,6 +436,78 @@ const TeacherDashboard = () => {
         </div>
     );
 
+    // Helper to group resources by type (Video vs Others)
+    const renderCategorizedResources = (recursosJson) => {
+        try {
+            const arr = JSON.parse(recursosJson);
+            if (!Array.isArray(arr) || arr.length === 0) return null;
+
+            const videos = [];
+            const docs = [];
+
+            arr.forEach(r => {
+                const url = r.url?.toLowerCase() || '';
+                if (url.endsWith('.mp4') || url.endsWith('.webm') || url.endsWith('.mov')) {
+                    videos.push(r);
+                } else {
+                    docs.push(r);
+                }
+            });
+
+            return (
+                <div className="tc-moodle-resource-container">
+                    {docs.length > 0 && (
+                        <div className="tc-moodle-category">
+                            <div className="tc-moodle-banner tc-banner-material">
+                                MATERIAL DISPONIBLE
+                            </div>
+                            <ul className="tc-moodle-res-list">
+                                {docs.map((d, i) => (
+                                    <li key={i} className="tc-moodle-res-row">
+                                        <div className="tc-moodle-res-left">
+                                            <FileText size={20} className="tc-res-icon ic-doc" />
+                                            <span className="tc-res-name">{d.nombre}</span>
+                                        </div>
+                                        <div className="tc-moodle-res-right">
+                                            <a href={d.url} target="_blank" rel="noopener noreferrer" className="tc-moodle-action-btn">
+                                                Ver
+                                            </a>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
+                    {videos.length > 0 && (
+                        <div className="tc-moodle-category">
+                            <div className="tc-moodle-banner tc-banner-video">
+                                VIDEOGRAFÍA
+                            </div>
+                            <ul className="tc-moodle-res-list">
+                                {videos.map((v, i) => (
+                                    <li key={i} className="tc-moodle-res-row">
+                                        <div className="tc-moodle-res-left">
+                                            <MonitorPlay size={20} className="tc-res-icon ic-vid" />
+                                            <span className="tc-res-name">{v.nombre}</span>
+                                        </div>
+                                        <div className="tc-moodle-res-right">
+                                            <a href={v.url} target="_blank" rel="noopener noreferrer" className="tc-moodle-action-btn tc-action-video">
+                                                Reproducir
+                                            </a>
+                                        </div>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
+            );
+        } catch (e) {
+            return null; // Invalid JSON or empty
+        }
+    };
+
     // ============ RENDER: MÓDULOS ============
     const renderModulos = () => (
         <div className="tc-section">
@@ -426,37 +529,39 @@ const TeacherDashboard = () => {
                     <p>Agrega el primer módulo a esta lección.</p>
                 </div>
             ) : (
-                <div className="tc-list">
-                    <p className="tc-drag-hint">↕ Arrastra para reordenar los módulos</p>
+                <div className="tc-moodle-list">
+                    <p className="tc-drag-hint" style={{ marginBottom: '16px' }}>↕ Arrastra desde el icono gris para reordenar los módulos</p>
                     {modulos.map((modulo, idx) => (
                         <div
                             key={modulo.idModulo}
-                            className={`tc-item-card tc-draggable ${draggedIdx === idx ? 'dragging' : ''}`}
+                            className={`tc-moodle-card tc-draggable ${draggedIdx === idx ? 'dragging' : ''}`}
                             draggable
                             onDragStart={() => handleDragStart(idx)}
                             onDragOver={(e) => handleDragOver(e, idx)}
                             onDragEnd={handleDragEnd}
                         >
-                            <div className="tc-item-main">
-                                <GripVertical size={18} className="tc-grip" />
-                                <span className="tc-orden-badge">{modulo.orden ?? idx + 1}</span>
-                                <FileText size={18} className="tc-item-icon" />
-                                <div className="tc-item-info">
-                                    <h4>{modulo.tituloSeccion}</h4>
-                                    {modulo.descripcion && <p className="tc-modulo-desc">{modulo.descripcion.slice(0, 120)}{modulo.descripcion.length > 120 ? '…' : ''}</p>}
-                                    <div className="tc-modulo-meta">
-                                        {modulo.urlRecurso && (
-                                            <a href={modulo.urlRecurso} target="_blank" rel="noopener noreferrer" className="tc-resource-link" onClick={e => e.stopPropagation()}>
-                                                Ver recurso
-                                            </a>
-                                        )}
-                                    </div>
+                            <div className="tc-moodle-header">
+                                <div className="tc-moodle-header-main">
+                                    <GripVertical size={20} className="tc-grip" />
+                                    <h3 className="tc-moodle-title">
+                                        <span className="tc-moodle-order">{modulo.orden ?? idx + 1}.- </span>
+                                        {modulo.tituloSeccion}
+                                    </h3>
+                                </div>
+                                <div className="tc-item-actions">
+                                    <button className="tc-edit-btn" onClick={() => openEditModuloModal(modulo)} title="Editar"><Edit3 size={16} /></button>
+                                    <button className="tc-delete-btn" onClick={() => setDeleteTarget(modulo)} title="Eliminar"><Trash2 size={16} /></button>
                                 </div>
                             </div>
-                            <div className="tc-item-actions">
-                                <button className="tc-edit-btn" onClick={() => openEditModuloModal(modulo)} title="Editar"><Edit3 size={16} /></button>
-                                <button className="tc-delete-btn" onClick={() => setDeleteTarget(modulo)} title="Eliminar"><Trash2 size={16} /></button>
-                            </div>
+
+                            {modulo.descripcion && (
+                                <div className="tc-moodle-desc">
+                                    {modulo.descripcion}
+                                </div>
+                            )}
+
+                            {modulo.recursos && renderCategorizedResources(modulo.recursos)}
+
                         </div>
                     ))}
                 </div>
@@ -464,25 +569,35 @@ const TeacherDashboard = () => {
         </div>
     );
 
-    // ============ FILE INPUT COMPONENT ============
-    const FileOrUrlInput = ({ file, onFileChange, inputRef, preview, uploading, accept, label }) => (
+    // ============ MULTIPLE FILE INPUT COMPONENT ============
+    const MultiFileInput = ({ recursos, onFileChange, onRemove, inputRef, uploading, accept, label }) => (
         <div className="tc-form-group">
             <label>{label}</label>
-            <div className="tc-upload-area" onClick={() => inputRef.current?.click()}>
-                <input type="file" ref={inputRef} accept={accept} onChange={onFileChange} hidden />
-                {uploading ? (
-                    <div className="tc-upload-loading"><div className="tc-spinner-sm" /> Subiendo...</div>
-                ) : file ? (
-                    <div className="tc-upload-selected">
-                        {preview && <div className="tc-upload-img-wrapper"><img src={preview} alt="preview" className="tc-upload-preview-scaled" /></div>}
-                        <span className="tc-upload-name">{file.name}</span>
-                        <button type="button" className="tc-upload-change-btn">Cambiar</button>
+            <div className="tc-recursos-stack">
+                {recursos.map((rec) => (
+                    <div key={rec.id} className="tc-recurso-item">
+                        {rec.preview ? (
+                            <img src={rec.preview} alt="preview" className="tc-recurso-thumb" />
+                        ) : (
+                            <div className="tc-recurso-file-icon"><FileText size={20} /></div>
+                        )}
+                        <span className="tc-recurso-name">{rec.name}</span>
+                        <button type="button" className="tc-recurso-remove" onClick={() => onRemove(rec.id)}>
+                            <X size={16} />
+                        </button>
                     </div>
+                ))}
+            </div>
+
+            <div className="tc-upload-area" onClick={() => inputRef.current?.click()} style={{ marginTop: recursos.length > 0 ? '12px' : '0' }}>
+                <input type="file" ref={inputRef} accept={accept} onChange={onFileChange} multiple hidden />
+                {uploading ? (
+                    <div className="tc-upload-loading"><div className="tc-spinner-sm" /> Subiendo archivos...</div>
                 ) : (
                     <div className="tc-upload-placeholder">
                         <Upload size={24} className="tc-upload-icon" />
-                        <span className="tc-upload-title">Haz clic para buscar un archivo</span>
-                        <span className="tc-upload-hint">{accept === 'image/*' ? 'PNG, JPG, JPEG, WEBP' : 'Imágenes, PDF, Video'} — Máx 10MB</span>
+                        <span className="tc-upload-title">Haz clic para agregar {recursos.length > 0 ? 'más archivos' : 'archivos'}</span>
+                        <span className="tc-upload-hint">{accept === 'image/*' ? 'PNG, JPG, JPEG, WEBP' : 'Imágenes, PDF, Video'} — Máx 10MB c/u</span>
                     </div>
                 )}
             </div>
@@ -504,9 +619,11 @@ const TeacherDashboard = () => {
                             <input type="text" placeholder="Título de la lección" value={formTitulo}
                                 onChange={e => setFormTitulo(e.target.value)} required maxLength={200} />
                         </div>
-                        <FileOrUrlInput
-                            file={portadaFile} onFileChange={handlePortadaFileChange}
-                            inputRef={portadaInputRef} preview={portadaPreview}
+                        <MultiFileInput
+                            recursos={portadaFile ? [{ id: 'port', name: portadaFile.name, preview: portadaPreview, file: portadaFile }] : (formPortadaUrl ? [{ id: 'port-url', name: 'Portada Actual (Sustituir)', preview: formPortadaUrl }] : [])}
+                            onFileChange={handlePortadaFileChange}
+                            onRemove={() => { setPortadaFile(null); setPortadaPreview(''); setFormPortadaUrl(''); }}
+                            inputRef={portadaInputRef}
                             uploading={uploadingPortada} accept="image/*"
                             label="Portada de la lección"
                         />
@@ -547,12 +664,14 @@ const TeacherDashboard = () => {
                                 rows={4}
                             />
                         </div>
-                        <FileOrUrlInput
-                            file={recursoFile} onFileChange={handleRecursoFileChange}
-                            inputRef={recursoInputRef} preview={recursoPreview}
+                        <MultiFileInput
+                            recursos={formRecursos}
+                            onFileChange={handleRecursoFileChange}
+                            onRemove={handleRemoveRecurso}
+                            inputRef={recursoInputRef}
                             uploading={uploadingRecurso}
                             accept="image/*,application/pdf,video/mp4,video/webm"
-                            label="Recurso del módulo"
+                            label="Recursos del módulo (Sube uno o varios)"
                         />
                         <div className="tc-form-group">
                             <label>Orden <span className="tc-optional">(opcional)</span></label>
