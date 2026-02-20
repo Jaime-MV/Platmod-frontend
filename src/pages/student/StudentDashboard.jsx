@@ -17,11 +17,12 @@ import {
     Moon
 } from 'lucide-react';
 import './StudentStyles.css';
+import StudentForo from './StudentForo';
 
 // Hoisted outside component — static data, no re-creation per render (rendering-hoist-jsx)
 const MENU_ITEMS = [
     { id: 'inicio', label: 'Inicio', icon: Home },
-    { id: 'comentarios', label: 'Comentarios', icon: MessageSquare },
+    { id: 'foro', label: 'Foro', icon: MessageSquare },
     { id: 'rutas', label: 'Mis Rutas', icon: Map },
     { id: 'progreso', label: 'Mi progreso', icon: TrendingUp },
     { id: 'certificados', label: 'Mis certificados', icon: Award },
@@ -29,11 +30,11 @@ const MENU_ITEMS = [
 ];
 
 const PLACEHOLDER_DATA = {
-    comentarios: {
-        icon: '💬',
-        title: 'Tus Comentarios',
-        description: 'Aquí podrás ver y gestionar tus comentarios en los cursos.',
-        features: ['Historial de comentarios', 'Respuestas recibidas', 'Discusiones activas']
+    foro: {
+        icon: '⠋⠕⠗⠕',
+        title: 'Foro Braile',
+        description: 'Página accesible con texto en Braile y foro de la comunidad.',
+        features: ['Texto en Braile', 'Comunidad', 'Próximamente foro interactivo']
     },
     rutas: {
         icon: '🗺️',
@@ -110,6 +111,13 @@ const StudentDashboard = () => {
                             <p className="profile-email">{user?.correo || 'correo@email.com'}</p>
                             <span className="profile-role-badge">{user?.rol || 'ESTUDIANTE'}</span>
                         </div>
+                    </div>
+                );
+            case 'foro':
+                return (
+                    <div className="student-foro-wrapper">
+                        {/* Importa y muestra la página de foro */}
+                        <StudentForo />
                     </div>
                 );
             default: {
