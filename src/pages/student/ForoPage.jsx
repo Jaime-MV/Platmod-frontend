@@ -4,6 +4,7 @@ import {
     getPreguntas, crearPregunta, getRespuestas, crearRespuesta,
     getMisPreguntas, getFavoritos, toggleFavorito, eliminarPregunta
 } from '../../services/api';
+import { uploadForoFile, isImageFile } from '../../services/supabase';
 import {
     ArrowLeft,
     MessageCircle,
@@ -18,7 +19,11 @@ import {
     Heart,
     Trash2,
     List,
-    Star
+    Star,
+    Paperclip,
+    FileText,
+    Image,
+    Download
 } from 'lucide-react';
 import './ForoStyles.css';
 
@@ -47,6 +52,11 @@ const ForoPage = () => {
     const [nuevaCategoria, setNuevaCategoria] = useState('General');
     const [nuevaRespuesta, setNuevaRespuesta] = useState('');
     const [enviando, setEnviando] = useState(false);
+
+    // File upload
+    const [archivo, setArchivo] = useState(null);
+    const [subiendoArchivo, setSubiendoArchivo] = useState(false);
+    const [errorArchivo, setErrorArchivo] = useState('');
 
     // Delete modal
     const [deleteTarget, setDeleteTarget] = useState(null);
@@ -83,27 +93,72 @@ const ForoPage = () => {
         setLoadingRespuestas(false);
     };
 
+    const handleFileSelect = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        setErrorArchivo('');
+
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        if (file.size > maxSize) {
+            setErrorArchivo('El archivo excede el límite de 5MB');
+            return;
+        }
+
+        const allowed = ['image/png', 'image/jpeg', 'image/jpg', 'image/webp',
+            'application/pdf', 'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!allowed.includes(file.type)) {
+            setErrorArchivo('Tipo no permitido. Usa PNG, JPG, PDF o Word');
+            return;
+        }
+
+        setArchivo(file);
+    };
+
+    const handleRemoveFile = () => {
+        setArchivo(null);
+        setErrorArchivo('');
+    };
+
     const handleCrearPregunta = async (e) => {
         e.preventDefault();
         if (!nuevoTitulo.trim() || !nuevoContenido.trim()) return;
 
         setEnviando(true);
         try {
+            let archivoUrl = null;
+            let archivoNombre = null;
+
+            // Upload file to Supabase if present
+            if (archivo) {
+                setSubiendoArchivo(true);
+                const result = await uploadForoFile(archivo);
+                archivoUrl = result.url;
+                archivoNombre = result.nombre;
+                setSubiendoArchivo(false);
+            }
+
             await crearPregunta({
                 titulo: nuevoTitulo.trim(),
                 contenido: nuevoContenido.trim(),
-                categoria: nuevaCategoria
+                categoria: nuevaCategoria,
+                archivoUrl,
+                archivoNombre
             });
+
             setNuevoTitulo('');
             setNuevoContenido('');
             setNuevaCategoria('General');
+            setArchivo(null);
             setVista('lista');
             setTabActivo('todas');
             await cargarPreguntas();
         } catch (err) {
             console.error('Error al crear pregunta:', err);
+            setErrorArchivo(err.message);
         }
         setEnviando(false);
+        setSubiendoArchivo(false);
     };
 
     const handleCrearRespuesta = async (e) => {
@@ -132,17 +187,14 @@ const ForoPage = () => {
         e.stopPropagation();
         try {
             const result = await toggleFavorito(pregunta.idPregunta);
-            // Update local state
             setPreguntas(prev => prev.map(p =>
                 p.idPregunta === pregunta.idPregunta
                     ? { ...p, esFavorito: result.favorito }
                     : p
             ));
-            // If in favoritos tab and unfavorited, remove from list
             if (tabActivo === 'favoritos' && !result.favorito) {
                 setPreguntas(prev => prev.filter(p => p.idPregunta !== pregunta.idPregunta));
             }
-            // Update detail view if open
             if (preguntaActual && preguntaActual.idPregunta === pregunta.idPregunta) {
                 setPreguntaActual(prev => ({ ...prev, esFavorito: result.favorito }));
             }
@@ -157,7 +209,6 @@ const ForoPage = () => {
         try {
             await eliminarPregunta(deleteTarget.idPregunta);
             setDeleteTarget(null);
-            // If deleting from detail view, go back to list
             if (vista === 'detalle') {
                 setVista('lista');
                 setPreguntaActual(null);
@@ -194,6 +245,38 @@ const ForoPage = () => {
         p.titulo.toLowerCase().includes(busqueda.toLowerCase()) ||
         p.contenido.toLowerCase().includes(busqueda.toLowerCase())
     );
+
+    // ============ ATTACHMENT DISPLAY ============
+    const renderAttachment = (archivoUrl, archivoNombre, isDetail = false) => {
+        if (!archivoUrl) return null;
+
+        if (isImageFile(archivoNombre)) {
+            return (
+                <div className={`foro-attachment ${isDetail ? 'detail' : 'card'}`}>
+                    <img
+                        src={archivoUrl}
+                        alt={archivoNombre}
+                        className="foro-attachment-img"
+                        onClick={(e) => { e.stopPropagation(); window.open(archivoUrl, '_blank'); }}
+                    />
+                </div>
+            );
+        }
+
+        return (
+            <a
+                href={archivoUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="foro-attachment-link"
+                onClick={(e) => e.stopPropagation()}
+            >
+                <FileText size={16} />
+                <span>{archivoNombre || 'Archivo adjunto'}</span>
+                <Download size={14} />
+            </a>
+        );
+    };
 
     // ============ DELETE MODAL ============
     const renderDeleteModal = () => {
@@ -272,12 +355,44 @@ const ForoPage = () => {
                             required
                         />
                     </div>
+
+                    {/* File Upload */}
+                    <div className="foro-form-group">
+                        <label>Archivo adjunto <span className="foro-label-optional">(opcional, máx 5MB)</span></label>
+                        {!archivo ? (
+                            <label className="foro-file-input">
+                                <Paperclip size={18} />
+                                <span>Seleccionar archivo (PNG, JPG, PDF, Word)</span>
+                                <input
+                                    type="file"
+                                    accept=".png,.jpg,.jpeg,.webp,.pdf,.doc,.docx"
+                                    onChange={handleFileSelect}
+                                    hidden
+                                />
+                            </label>
+                        ) : (
+                            <div className="foro-file-preview">
+                                <div className="foro-file-info">
+                                    {archivo.type.startsWith('image/') ? <Image size={18} /> : <FileText size={18} />}
+                                    <span className="foro-file-name">{archivo.name}</span>
+                                    <span className="foro-file-size">
+                                        {(archivo.size / 1024).toFixed(0)} KB
+                                    </span>
+                                </div>
+                                <button type="button" className="foro-file-remove" onClick={handleRemoveFile}>
+                                    <X size={16} />
+                                </button>
+                            </div>
+                        )}
+                        {errorArchivo && <p className="foro-file-error">{errorArchivo}</p>}
+                    </div>
+
                     <button
                         type="submit"
                         className="foro-submit-btn"
                         disabled={enviando || !nuevoTitulo.trim() || !nuevoContenido.trim()}
                     >
-                        {enviando ? 'Publicando...' : 'Publicar Pregunta'}
+                        {subiendoArchivo ? 'Subiendo archivo...' : enviando ? 'Publicando...' : 'Publicar Pregunta'}
                     </button>
                 </form>
             </div>
@@ -323,6 +438,9 @@ const ForoPage = () => {
                 </div>
                 <h2 className="foro-pregunta-titulo-detalle">{preguntaActual.titulo}</h2>
                 <p className="foro-pregunta-contenido-detalle">{preguntaActual.contenido}</p>
+
+                {renderAttachment(preguntaActual.archivoUrl, preguntaActual.archivoNombre, true)}
+
                 <div className="foro-pregunta-autor-bar">
                     <div className="foro-autor-info">
                         <div className="foro-avatar-sm"><User size={14} /></div>
@@ -414,6 +532,11 @@ const ForoPage = () => {
                         <MessageCircle size={14} />
                         {p.totalRespuestas}
                     </span>
+                    {p.archivoUrl && (
+                        <span className="foro-has-attachment">
+                            <Paperclip size={13} />
+                        </span>
+                    )}
                 </div>
                 <div className="foro-card-actions">
                     <button
@@ -438,6 +561,9 @@ const ForoPage = () => {
             <p className="foro-pregunta-preview">
                 {p.contenido.length > 120 ? p.contenido.slice(0, 120) + '...' : p.contenido}
             </p>
+
+            {renderAttachment(p.archivoUrl, p.archivoNombre, false)}
+
             <div className="foro-pregunta-footer">
                 <div className="foro-autor-info">
                     <div className="foro-avatar-sm"><User size={12} /></div>

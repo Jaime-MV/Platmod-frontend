@@ -855,6 +855,165 @@
     cursor: not-allowed;
 }
 
+/* --- FILE UPLOAD --- */
+.foro-label-optional {
+    color: #6B7A8C;
+    font-weight: 400;
+    font-size: 0.8rem;
+}
+
+.foro-file-input {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    border: 2px dashed var(--card-border);
+    border-radius: 12px;
+    color: #8B98A8;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.foro-file-input:hover {
+    border-color: var(--primary-orange, #FFA87A);
+    color: var(--primary-orange, #FFA87A);
+    background: rgba(255, 138, 91, 0.04);
+}
+
+.foro-file-input svg {
+    flex-shrink: 0;
+}
+
+.foro-file-preview {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(122, 181, 71, 0.06);
+    border: 1px solid rgba(122, 181, 71, 0.2);
+    border-radius: 12px;
+}
+
+.foro-file-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #7AB547;
+    font-size: 0.88rem;
+    min-width: 0;
+}
+
+.foro-file-name {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 250px;
+}
+
+.foro-file-size {
+    color: #8B98A8;
+    font-size: 0.78rem;
+    flex-shrink: 0;
+}
+
+.foro-file-remove {
+    background: none;
+    border: none;
+    color: #8B98A8;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 50%;
+    display: flex;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.foro-file-remove:hover {
+    color: #EF4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.foro-file-error {
+    color: #EF4444;
+    font-size: 0.82rem;
+    margin-top: 6px;
+}
+
+/* --- ATTACHMENT DISPLAY --- */
+.foro-attachment {
+    margin: 12px 0;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.foro-attachment.card {
+    max-height: 160px;
+}
+
+.foro-attachment.detail {
+    max-height: 400px;
+    margin-bottom: 20px;
+}
+
+.foro-attachment-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    display: block;
+}
+
+.foro-attachment.card .foro-attachment-img {
+    max-height: 160px;
+}
+
+.foro-attachment.detail .foro-attachment-img {
+    max-height: 400px;
+    object-fit: contain;
+}
+
+.foro-attachment-img:hover {
+    transform: scale(1.02);
+}
+
+.foro-attachment-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: rgba(122, 181, 71, 0.06);
+    border: 1px solid rgba(122, 181, 71, 0.2);
+    border-radius: 10px;
+    color: #7AB547;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.25s ease;
+    margin: 10px 0;
+}
+
+.foro-attachment-link:hover {
+    background: rgba(122, 181, 71, 0.12);
+    border-color: rgba(122, 181, 71, 0.35);
+}
+
+.foro-attachment-link span {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.foro-has-attachment {
+    color: var(--primary-orange, #FFA87A);
+    display: flex;
+    align-items: center;
+}
+
 /* ============================
    DARK MODE ENHANCEMENTS
    ============================ */
