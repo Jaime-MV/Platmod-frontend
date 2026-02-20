@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import {
     getPreguntas, crearPregunta, getRespuestas, crearRespuesta,
-    getMisPreguntas, getFavoritos, toggleFavorito, eliminarPregunta
+    getMisPreguntas, getFavoritos, toggleFavorito, eliminarPregunta, eliminarRespuesta
 } from '../../services/api';
 import { uploadForoFile, isImageFile } from '../../services/supabase';
 import {
@@ -536,6 +536,30 @@ const ForoPage = () => {
                                         <Clock size={13} />
                                         <span>{formatFecha(r.fechaCreacion)}</span>
                                     </div>
+                                    {/* Botón eliminar solo para el autor */}
+                                    {user && r.idUsuario === user.id && (
+                                        <button
+                                            className="foro-respuesta-delete-btn"
+                                            title="Eliminar respuesta"
+                                            onClick={async () => {
+                                                if (window.confirm('¿Eliminar esta respuesta?')) {
+                                                    try {
+                                                        await eliminarRespuesta(r.idRespuesta);
+                                                        const data = await getRespuestas(preguntaActual.idPregunta);
+                                                        setRespuestas(data);
+                                                        setPreguntaActual(prev => ({
+                                                            ...prev,
+                                                            totalRespuestas: data.length
+                                                        }));
+                                                    } catch (err) {
+                                                        alert('Error al eliminar respuesta: ' + err.message);
+                                                    }
+                                                }
+                                            }}
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
                         ))}

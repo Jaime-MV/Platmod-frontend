@@ -1,3 +1,15 @@
+// Elimina una respuesta — solo el autor puede hacerlo
+export const eliminarRespuesta = async (idRespuesta) => {
+    const response = await fetch(`${API_URL}/foro/respuestas/${idRespuesta}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Error al eliminar respuesta');
+    // Si la respuesta está vacía, no intentes parsear JSON
+    const text = await response.text();
+    if (!text) return {};
+    return JSON.parse(text);
+};
 // src/services/api.js
 import { API_URL } from '../config';
 
