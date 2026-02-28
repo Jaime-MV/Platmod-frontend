@@ -4,14 +4,10 @@ import { useTheme } from '../../context/ThemeContext';
 import { useNavigate } from 'react-router-dom';
 import CourseGrid from '../../components/CourseGrid';
 import ForoPage from './ForoPage';
+import StudentCourseView from './StudentCourseView';
 import { getCursos } from '../../services/api';
 import {
     Home,
-    MessageSquare,
-    Map,
-    TrendingUp,
-    Award,
-    Bell,
     HelpCircle,
     User,
     LogOut,
@@ -23,46 +19,10 @@ import './StudentStyles.css';
 // Hoisted outside component — static data, no re-creation per render (rendering-hoist-jsx)
 const MENU_ITEMS = [
     { id: 'inicio', label: 'Inicio', icon: Home },
-    { id: 'comentarios', label: 'Comentarios', icon: MessageSquare },
-    { id: 'rutas', label: 'Mis Rutas', icon: Map },
-    { id: 'progreso', label: 'Mi progreso', icon: TrendingUp },
-    { id: 'certificados', label: 'Mis certificados', icon: Award },
-    { id: 'notificaciones', label: 'Notificaciones', icon: Bell },
     { id: 'foro', label: 'Foro Q&A', icon: HelpCircle },
 ];
 
-const PLACEHOLDER_DATA = {
-    comentarios: {
-        icon: '💬',
-        title: 'Tus Comentarios',
-        description: 'Aquí podrás ver y gestionar tus comentarios en los cursos.',
-        features: ['Historial de comentarios', 'Respuestas recibidas', 'Discusiones activas']
-    },
-    rutas: {
-        icon: '🗺️',
-        title: 'Mis Rutas de Aprendizaje',
-        description: 'Rutas personalizadas para guiar tu proceso de aprendizaje.',
-        features: ['Rutas sugeridas', 'Progreso por ruta', 'Objetivos de aprendizaje']
-    },
-    progreso: {
-        icon: '📊',
-        title: 'Mi Progreso',
-        description: 'Métricas detalladas de tu avance en los cursos.',
-        features: ['Horas de estudio', 'Cursos completados', 'Racha de aprendizaje']
-    },
-    certificados: {
-        icon: '🏆',
-        title: 'Mis Certificados',
-        description: 'Certificados obtenidos al completar los cursos.',
-        features: ['Descargar certificados', 'Compartir en LinkedIn', 'Verificación digital']
-    },
-    notificaciones: {
-        icon: '🔔',
-        title: 'Notificaciones',
-        description: 'Mantente al día con las novedades de tus cursos.',
-        features: ['Nuevas lecciones', 'Actualizaciones de cursos', 'Mensajes del instructor']
-    }
-};
+const PLACEHOLDER_DATA = {};
 
 const StudentDashboard = () => {
     const { user, logout } = useAuth();
@@ -70,6 +30,7 @@ const StudentDashboard = () => {
     const navigate = useNavigate();
     const [cursos, setCursos] = useState([]);
     const [activeTab, setActiveTab] = useState('inicio');
+    const [selectedCourse, setSelectedCourse] = useState(null);
 
     useEffect(() => {
         const fetchCursos = async () => {
@@ -81,7 +42,6 @@ const StudentDashboard = () => {
         fetchCursos();
     }, []);
 
-
     const handleLogout = () => {
         logout();
         navigate('/login');
@@ -89,9 +49,10 @@ const StudentDashboard = () => {
 
     const renderContent = () => {
         switch (activeTab) {
-            case 'foro':
-                return <ForoPage />;
             case 'inicio':
+                if (selectedCourse) {
+                    return <StudentCourseView curso={selectedCourse} onBack={() => setSelectedCourse(null)} />;
+                }
                 return (
                     <div>
                         <div className="welcome-header">
@@ -100,7 +61,7 @@ const StudentDashboard = () => {
                         </div>
                         <h2 className="courses-section-title">Cursos Disponibles</h2>
                         <div className="courses-grid-wrapper">
-                            <CourseGrid courses={cursos} />
+                            <CourseGrid courses={cursos} onCourseClick={(curso) => setSelectedCourse(curso)} />
                         </div>
                     </div>
                 );
@@ -168,7 +129,10 @@ const StudentDashboard = () => {
                                     <li
                                         key={item.id}
                                         className={`sidebar-item ${activeTab === item.id ? 'active' : ''}`}
-                                        onClick={() => setActiveTab(item.id)}
+                                        onClick={() => {
+                                            setActiveTab(item.id);
+                                            if (item.id === 'inicio') setSelectedCourse(null);
+                                        }}
                                     >
                                         <IconComponent size={20} strokeWidth={1.8} />
                                         <span>{item.label}</span>

@@ -1,3 +1,57 @@
+// Eliminar plan de suscripción
+export const eliminarPlan = async (idPlan) => {
+    const response = await fetch(`${API_URL}/admin/planes/${idPlan}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Error al eliminar plan');
+    const text = await response.text();
+    if (!text) return {};
+    return JSON.parse(text);
+};
+
+// CRUD DOCENTES (ajustado a la especificación)
+// Crear docente
+export const crearDocente = async ({ nombre, correo, contrasena, especialidad }) => {
+    const body = { nombre, correo, contrasena };
+    if (especialidad) body.especialidad = especialidad;
+    const response = await fetch(`${API_URL}/admin/docentes`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(body)
+    });
+    if (!response.ok) throw new Error('Error al crear docente');
+    return await response.json();
+};
+
+// Editar docente (solo enviar campos a cambiar)
+export const editarDocente = async (idDocente, data) => {
+    const body = {};
+    if (data.nombre) body.nombre = data.nombre;
+    if (data.correo) body.correo = data.correo;
+    if (data.contrasena) body.contrasena = data.contrasena;
+    if (data.especialidad) body.especialidad = data.especialidad;
+    if (data.estadoDocente !== undefined) body.estadoDocente = data.estadoDocente;
+    const response = await fetch(`${API_URL}/admin/docentes/${idDocente}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(body)
+    });
+    if (!response.ok) throw new Error('Error al editar docente');
+    return await response.json();
+};
+
+// Eliminar docente (soft delete)
+export const eliminarDocente = async (idDocente) => {
+    const response = await fetch(`${API_URL}/admin/docentes/${idDocente}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Error al eliminar docente');
+    const text = await response.text();
+    if (!text) return {};
+    return JSON.parse(text);
+};
 // Elimina una respuesta — solo el autor puede hacerlo
 export const eliminarRespuesta = async (idRespuesta) => {
     const response = await fetch(`${API_URL}/foro/respuestas/${idRespuesta}`, {
@@ -87,9 +141,9 @@ export const getDocentesHome = async () => {
 // Obtener lista completa de docentes (Usando el endpoint que creamos)
 export const getAllDocentes = async () => {
     try {
-        const response = await fetch(`${API_URL}/admin/docentes-list`, {
+        const response = await fetch(`${API_URL}/admin/docentes`, {
             method: 'GET',
-            headers: getAuthHeaders() // Usamos el helper
+            headers: getAuthHeaders()
         });
         if (!response.ok) throw new Error('Error al cargar docentes');
         return await response.json();
@@ -313,4 +367,120 @@ export const eliminarPregunta = async (id) => {
         throw new Error(errorData.error || 'Error al eliminar pregunta');
     }
     return true;
+};
+
+// --- DOCENTE SERVICES ---
+
+export const getDocenteCursos = async () => {
+    try {
+        const response = await fetch(`${API_URL}/docentes/mis-cursos`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Error al cargar cursos del docente');
+        return await response.json();
+    } catch (error) {
+        console.error("Error getDocenteCursos:", error);
+        return [];
+    }
+};
+
+export const getDocenteLecciones = async (idCurso) => {
+    try {
+        const response = await fetch(`${API_URL}/docentes/cursos/${idCurso}/lecciones`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Error al cargar lecciones');
+        return await response.json();
+    } catch (error) {
+        console.error("Error getDocenteLecciones:", error);
+        return [];
+    }
+};
+
+export const crearLeccion = async (idCurso, data) => {
+    const response = await fetch(`${API_URL}/docentes/cursos/${idCurso}/lecciones`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('Error al crear lección');
+    return await response.json();
+};
+
+export const editarLeccion = async (idLeccion, data) => {
+    const response = await fetch(`${API_URL}/docentes/lecciones/${idLeccion}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('Error al editar lección');
+    return await response.json();
+};
+
+export const eliminarLeccion = async (idLeccion) => {
+    const response = await fetch(`${API_URL}/docentes/lecciones/${idLeccion}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Error al eliminar lección');
+    const text = await response.text();
+    if (!text) return {};
+    return JSON.parse(text);
+};
+
+export const getModulos = async (idLeccion) => {
+    try {
+        const response = await fetch(`${API_URL}/docentes/lecciones/${idLeccion}/modulos`, {
+            method: 'GET',
+            headers: getAuthHeaders()
+        });
+        if (!response.ok) throw new Error('Error al cargar módulos');
+        return await response.json();
+    } catch (error) {
+        console.error("Error getModulos:", error);
+        return [];
+    }
+};
+
+export const crearModulo = async (idLeccion, data) => {
+    const response = await fetch(`${API_URL}/docentes/lecciones/${idLeccion}/modulos`, {
+        method: 'POST',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('Error al crear módulo');
+    return await response.json();
+};
+
+export const editarModulo = async (idModulo, data) => {
+    const response = await fetch(`${API_URL}/docentes/modulos/${idModulo}`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(data)
+    });
+    if (!response.ok) throw new Error('Error al editar módulo');
+    return await response.json();
+};
+
+export const eliminarModulo = async (idModulo) => {
+    const response = await fetch(`${API_URL}/docentes/modulos/${idModulo}`, {
+        method: 'DELETE',
+        headers: getAuthHeaders()
+    });
+    if (!response.ok) throw new Error('Error al eliminar módulo');
+    const text = await response.text();
+    if (!text) return {};
+    return JSON.parse(text);
+};
+
+export const reordenarModulos = async (idLeccion, ordenData) => {
+    const response = await fetch(`${API_URL}/docentes/lecciones/${idLeccion}/modulos/orden`, {
+        method: 'PUT',
+        headers: getAuthHeaders(),
+        body: JSON.stringify(ordenData)
+    });
+    if (!response.ok) throw new Error('Error al reordenar módulos');
+    return await response.json();
 };
