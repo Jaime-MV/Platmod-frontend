@@ -11,8 +11,9 @@ import { uploadDocenteFile } from '../../services/supabase';
 import {
     Home, BookOpen, Layers, User, LogOut, Sun, Moon,
     Plus, Edit3, Trash2, X, Send, GripVertical,
-    ChevronRight, FileText, Upload, Image as ImageIcon, Link as LinkIcon
+    ChevronRight, FileText, Upload, Image as ImageIcon, Link as LinkIcon, MessageCircle
 } from 'lucide-react';
+import ForoPage from '../student/ForoPage';
 import './TeacherStyles.css';
 
 // ============ MULTIPLE FILE INPUT COMPONENT ============
@@ -910,6 +911,9 @@ const TeacherDashboard = () => {
                             <li className={`tc-sidebar-item ${vista === 'cursos' && !cursoActual ? 'active' : ''}`} onClick={navigateToCursos}>
                                 <Home size={20} strokeWidth={1.8} /><span>Mis Cursos</span>
                             </li>
+                            <li className={`tc-sidebar-item ${vista === 'foro' ? 'active' : ''}`} onClick={() => { setVista('foro'); setCursoActual(null); setLeccionActual(null); }}>
+                                <MessageCircle size={20} strokeWidth={1.8} /><span>Foro Q&A</span>
+                            </li>
                         </ul>
                     </nav>
                     <div className="tc-sidebar-footer">
@@ -928,10 +932,11 @@ const TeacherDashboard = () => {
             </aside>
 
             <main className="tc-content">
-                {renderBreadcrumb()}
+                {vista !== 'foro' && renderBreadcrumb()}
                 {vista === 'cursos' && renderCursos()}
                 {vista === 'lecciones' && renderLecciones()}
                 {vista === 'modulos' && renderModulos()}
+                {vista === 'foro' && <ForoPage />}
                 {showModal && vista === 'lecciones' && renderLeccionModal()}
                 {showModal && vista === 'modulos' && renderModuloModal()}
                 {renderDeleteModal()}

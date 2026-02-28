@@ -6,7 +6,7 @@ const handleImgError = (e) => {
   e.target.src = 'https://via.placeholder.com/50?text=C';
 };
 
-const CourseGrid = React.memo(({ courses }) => {
+const CourseGrid = React.memo(({ courses, onCourseClick }) => {
   // 1. Manejo de estado vacío — check length first (js-length-check-first)
   if (!courses || courses.length === 0) {
     return (
@@ -46,7 +46,12 @@ const CourseGrid = React.memo(({ courses }) => {
             </div>
 
             {/* LINK FANTASMA */}
-            <a href={`#curso-${curso.idCurso}`} className="card-link-overlay" aria-label={`Ver curso ${curso.titulo}`}></a>
+            <div
+              className="card-link-overlay"
+              aria-label={`Ver curso ${curso.titulo}`}
+              onClick={() => onCourseClick && onCourseClick(curso)}
+              style={{ cursor: 'pointer' }}
+            ></div>
           </div>
         ))}
       </div>
